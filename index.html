@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>深層 STUDIO</title>
+    <meta name="description" content="深層 STUDIO — Independent Game Studio">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg: #070809;
+            --bg-soft: #0c0e10;
+            --text: #e8eaec;
+            --muted: #73787d;
+            --line: rgba(255,255,255,0.09);
+            --blue: #8bb8d8;
+            --blue-soft: rgba(139,184,216,0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", "Noto Sans KR", sans-serif;
+            font-weight: 300;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ::selection {
+            background: rgba(139,184,216,0.25);
+        }
+
+        /* --------------------------------
+           Background
+        -------------------------------- */
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.035;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+        }
+
+        .ambient {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: rgba(70,110,140,0.07);
+            filter: blur(120px);
+            pointer-events: none;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --------------------------------
+           Navigation
+        -------------------------------- */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6vw;
+            z-index: 50;
+
+            background: linear-gradient(
+                to bottom,
+                rgba(7,8,9,0.9),
+                rgba(7,8,9,0)
+            );
+        }
+
+        .nav-logo {
+            font-size: 14px;
+            letter-spacing: 0.25em;
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            color: var(--muted);
+        }
+
+        .nav-links a {
+            transition: color .3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* --------------------------------
+           Hero
+        -------------------------------- */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 120px 6vw;
+        }
+
+        .hero-content {
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 42px;
+
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .status {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--blue);
+            box-shadow: 0 0 15px rgba(139,184,216,.6);
+        }
+
+        .hero-title {
+            font-size: clamp(75px, 13vw, 190px);
+            font-weight: 500;
+            line-height: .82;
+            letter-spacing: -0.055em;
+        }
+
+        .hero-title span {
+            display: block;
+        }
+
+        .hero-title .kr {
+            font-family: "Noto Sans KR", sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.1em;
+        }
+
+        .hero-subtitle {
+            margin-top: 52px;
+            max-width: 520px;
+
+            font-size: 13px;
+            line-height: 2;
+            letter-spacing: .08em;
+            color: var(--muted);
+        }
+
+        .hero-line {
+            position: absolute;
+            left: 6vw;
+            right: 6vw;
+            bottom: 80px;
+            height: 1px;
+            background: var(--line);
+        }
+
+        .scroll {
+            position: absolute;
+            bottom: 45px;
+            right: 6vw;
+
+            font-size: 9px;
+            letter-spacing: .25em;
+            color: var(--muted);
+        }
+
+        /* --------------------------------
+           Sections
+        -------------------------------- */
+
+        section {
+            padding: 160px 6vw;
+            position: relative;
+        }
+
+        .section-inner {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            margin-bottom: 70px;
+
+            font-size: 10px;
+            letter-spacing: .25em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .section-label::before {
+            content: "";
+            width: 25px;
+            height: 1px;
+            background: var(--blue);
+        }
+
+        /* --------------------------------
+           Project
+        -------------------------------- */
+
+        .project {
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 50px 0;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+        }
+
+        .project-number {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: .15em;
+        }
+
+        .project-title {
+            font-size: clamp(38px, 5vw, 72px);
+            font-weight: 500;
+            letter-spacing: -.04em;
+            margin-bottom: 25px;
+        }
+
+        .project-description {
+            max-width: 620px;
+            font-size: 14px;
+            line-height: 2;
+            color: #8c9196;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            border: 1px solid var(--line);
+            padding: 8px 13px;
+            font-size: 9px;
+            letter-spacing: .15em;
+            color: var(--muted);
+        }
+
+        .project-image {
+            margin-top: 55px;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    120deg,
+                    #101416,
+                    #080a0b 55%,
+                    #111b22
+                );
+
+            border: 1px solid var(--line);
+        }
+
+        .monitor {
+            position: absolute;
+            width: 55%;
+            height: 58%;
+            left: 22%;
+            top: 17%;
+
+            background: #060708;
+            border: 7px solid #15181b;
+            box-shadow:
+                0 30px 80px rgba(0,0,0,.8),
+                0 0 80px rgba(70,120,150,.07);
+        }
+
+        .monitor::before {
+            content: "";
+            position: absolute;
+            inset: 10px;
+            background:
+                linear-gradient(
+                    rgba(130,180,210,.06) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(130,180,210,.06) 1px,
+                    transparent 1px
+                );
+            background-size: 30px 30px;
+        }
+
+        .screen-text {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 10px;
+            color: rgba(160,205,225,.55);
+            letter-spacing: .12em;
+            line-height: 2;
+        }
+
+        .desk {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25%;
+            background: #101214;
+            border-top: 1px solid rgba(255,255,255,.04);
+        }
+
+        /* --------------------------------
+           About
+        -------------------------------- */
+
+        .about {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 80px;
+        }
+
+        .about-title {
+            font-size: clamp(35px, 5vw, 70px);
+            line-height: 1;
+            letter-spacing: -.05em;
+        }
+
+        .about-text {
+            max-width: 680px;
+            font-size: 16px;
+            line-height: 2.2;
+            color: #92979c;
+        }
+
+        .about-text strong {
+            color: #dfe3e6;
+            font-weight: 400;
+        }
+
+        /* --------------------------------
+           Philosophy
+        -------------------------------- */
+
+        .statement {
+            border-top: 1px solid var(--line);
+            padding-top: 70px;
+            font-size: clamp(30px, 5vw, 72px);
+            line-height: 1.25;
+            letter-spacing: -.045em;
+            max-width: 1100px;
+        }
+
+        .statement em {
+            font-style: normal;
+            color: var(--blue);
+        }
+
+        /* --------------------------------
+           Contact
+        -------------------------------- */
+
+        .contact {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-title {
+            font-size: clamp(50px, 9vw, 130px);
+            line-height: .9;
+            letter-spacing: -.06em;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 30px;
+            margin-top: 55px;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--line);
+            font-size: 11px;
+            letter-spacing: .15em;
+            color: var(--muted);
+            transition: all .3s ease;
+        }
+
+        .contact-link:hover {
+            color: #fff;
+            border-color: var(--blue);
+        }
+
+        /* --------------------------------
+           Footer
+        -------------------------------- */
+
+        footer {
+            padding: 40px 6vw;
+            border-top: 1px solid var(--line);
+
+            display: flex;
+            justify-content: space-between;
+
+            font-size: 9px;
+            letter-spacing: .18em;
+            color: #555a5f;
+        }
+
+        /* --------------------------------
+           Reveal animation
+        -------------------------------- */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition:
+                opacity 1s ease,
+                transform 1s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --------------------------------
+           Mobile
+        -------------------------------- */
+
+        @media (max-width: 700px) {
+
+            nav {
+                height: 65px;
+                padding: 0 25px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 8px;
+            }
+
+            .hero {
+                padding: 100px 25px;
+            }
+
+            .hero-title {
+                font-size: 22vw;
+            }
+
+            .hero-subtitle {
+                font-size: 11px;
+            }
+
+            .hero-line {
+                left: 25px;
+                right: 25px;
+            }
+
+            section {
+                padding: 100px 25px;
+            }
+
+            .project {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .project-image {
+                height: 300px;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .contact {
+                min-height: 50vh;
+            }
+
+            footer {
+                padding: 30px 25px;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="noise"></div>
+    <div class="ambient"></div>
+
+    <!-- Navigation -->
+
+    <nav>
+        <a href="#" class="nav-logo">深層 / STUDIO</a>
+
+        <div class="nav-links">
+            <a href="#project">PROJECT</a>
+            <a href="#about">ABOUT</a>
+            <a href="#contact">CONTACT</a>
+        </div>
+    </nav>
+
+
+    <!-- Hero -->
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="hero-meta reveal">
+                    <span class="status"></span>
+                    INDEPENDENT GAME STUDIO
+                </div>
+
+                <h1 class="hero-title reveal">
+                    <span class="kr">深層</span>
+                    <span>STUDIO</span>
+                </h1>
+
+                <p class="hero-subtitle reveal">
+                    We create games about the things
+                    hidden beneath what we know.
+                    <br><br>
+                    우리가 알고 있는 것의 아래에 숨겨진
+                    이야기를 탐구합니다.
+                </p>
+
+            </div>
+
+            <div class="hero-line"></div>
+
+            <div class="scroll">
+                SCROLL TO EXPLORE
+            </div>
+
+        </section>
+
+
+        <!-- Project -->
+
+        <section id="project">
+
+            <div class="section-inner">
+
+                <div class="section-label reveal">
+                    CURRENT PROJECT
+                </div>
+
+                <div class="project reveal">
+
+                    <div>
+                        <div class="project-number">
+                            PROJECT / 001
+                        </div>
+                    </div>
+
+                    <div>
+
+                        <h2 class="project-title">
+                            UNRECORDED
+                        </h2>
+
+                        <p class="project-description">
+                            오래된 인터넷 아카이브와 사라진 기록을 추적하며
+                            숨겨진 사건의 진실을 밝혀내는
+                            미스터리 조사 게임.
+                            <br><br>
+                            기록은 사라졌지만,
+                            흔적까지 사라진 것은 아니다.
+                        </p>
+
+                        <div class="project-tags">
+                            <span class="tag">MYSTERY</span>
+                            <span class="tag">INVESTIGATION</span>
+                            <span class="tag">PSYCHOLOGICAL HORROR</span>
+                            <span class="tag">ADVENTURE</span>
+                        </div>
+
+                        <div class="project-image">
+
+                            <div class="monitor">
+
+                                <div class="screen-text">
+                                    ARCHIVE SEARCH<br>
+                                    ----------------------<br>
+                                    QUERY: UNKNOWN<br><br>
+                                    RESULT FOUND: 01<br><br>
+                                    FILE STATUS: DELETED<br>
+                                    LAST ACCESS: 03:17:42
+                                </div>
+
+                            </div>
+
+                            <div class="desk"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- About -->
+
+        <section id="about">
+
+            <div class="section-inner">
+
+                <div class="section-label reveal">
+                    ABOUT US
+                </div>
+
+                <div class="about">
+
+                    <h2 class="about-title reveal">
+                        LOOK<br>
+                        DEEPER.
+                    </h2>
+
+                    <div class="about-text reveal">
+
+                        <p>
+                            <strong>深層 STUDIO</strong>는
+                            작지만 분명한 이야기를 만드는
+                            독립 게임 스튜디오입니다.
+                        </p>
+
+                        <br>
+
+                        <p>
+                            우리는 단순히 무서운 것을 보여주는 대신,
+                            플레이어가 직접 발견하고 의심하고
+                            해석할 수 있는 경험을 만들고자 합니다.
+                        </p>
+
+                        <br>
+
+                        <p>
+                            사라진 기록,
+                            설명되지 않는 흔적,
+                            누군가 의도적으로 숨긴 진실.
+                            <br>
+                            우리가 만드는 이야기는
+                            그곳에서 시작됩니다.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Philosophy -->
+
+        <section>
+
+            <div class="section-inner">
+
+                <div class="section-label reveal">
+                    PHILOSOPHY
+                </div>
+
+                <div class="statement reveal">
+                    The most frightening things
+                    are not the things we can see.
+                    <br><br>
+                    They are the things we
+                    <em>almost</em> understand.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Contact -->
+
+        <section id="contact" class="contact">
+
+            <div class="section-inner">
+
+                <div class="section-label reveal">
+                    CONTACT
+                </div>
+
+                <h2 class="contact-title reveal">
+                    LET'S<br>
+                    TALK.
+                </h2>
+
+                <div class="contact-links reveal">
+
+                    <!-- 나중에 실제 주소로 바꾸면 됨 -->
+
+                    <a
+                        href="#"
+                        class="contact-link"
+                    >
+                        DISCORD
+                    </a>
+
+                    <a
+                        href="mailto:contact@simcheung.studio"
+                        class="contact-link"
+                    >
+                        EMAIL
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <div>
+            深層 STUDIO
+        </div>
+
+        <div>
+            © 2026 SIMCHEUNG STUDIO
+        </div>
+
+    </footer>
+
+
+    <script>
+
+        /* Scroll reveal */
+
+        const revealElements =
+            document.querySelectorAll(".reveal");
+
+        const observer =
+            new IntersectionObserver(
+                (entries) => {
+
+                    entries.forEach(entry => {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target.classList.add("visible");
+
+                            observer.unobserve(entry.target);
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+        revealElements.forEach(element => {
+            observer.observe(element);
+        });
+
+
+        /* Subtle mouse movement */
+
+        const ambient =
+            document.querySelector(".ambient");
+
+        document.addEventListener("mousemove", (event) => {
+
+            const x =
+                (event.clientX / window.innerWidth - 0.5) * 40;
+
+            const y =
+                (event.clientY / window.innerHeight - 0.5) * 40;
+
+            ambient.style.transform =
+                `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+
+        });
+
+    </script>
+
+</body>
+</html>
