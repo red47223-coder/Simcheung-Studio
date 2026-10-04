@@ -1,847 +1,4408 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>深層 STUDIO</title>
-    <meta name="description" content="深層 STUDIO — Independent Game Studio">
+<title>深層 — SIMCHEUNG STUDIO</title>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+<meta
+    name="description"
+    content="深層 STUDIO — 숨겨진 이야기와 잊힌 기록을 다루는 독립 게임 개발 스튜디오."
+>
 
-        :root {
-            --bg: #070809;
-            --bg-soft: #0c0e10;
-            --text: #e8eaec;
-            --muted: #73787d;
-            --line: rgba(255,255,255,0.09);
-            --blue: #8bb8d8;
-            --blue-soft: rgba(139,184,216,0.12);
-        }
+<style>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* =========================================================
+   기본
+========================================================= */
 
-        html {
-            scroll-behavior: smooth;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: "Inter", "Noto Sans KR", sans-serif;
-            font-weight: 300;
-            overflow-x: hidden;
-        }
+html {
+    scroll-behavior: smooth;
+    background: #050607;
+}
 
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+body {
+    background: #050607;
+    color: #e8e9ea;
 
-        ::selection {
-            background: rgba(139,184,216,0.25);
-        }
+    font-family:
+        "Pretendard",
+        "Noto Sans KR",
+        "Malgun Gothic",
+        Arial,
+        sans-serif;
 
-        /* --------------------------------
-           Background
-        -------------------------------- */
+    overflow-x: hidden;
+}
 
-        .noise {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 100;
-            opacity: 0.035;
-            background-image:
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
-        }
+body.glitching {
+    filter: contrast(1.03);
+}
 
-        .ambient {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: rgba(70,110,140,0.07);
-            filter: blur(120px);
-            pointer-events: none;
-            top: 20%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+a {
+    color: inherit;
+    text-decoration: none;
+}
 
-        /* --------------------------------
-           Navigation
-        -------------------------------- */
+button {
+    font: inherit;
+}
 
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6vw;
-            z-index: 50;
+::selection {
+    background: #d8e2e7;
+    color: #050607;
+}
 
-            background: linear-gradient(
-                to bottom,
-                rgba(7,8,9,0.9),
-                rgba(7,8,9,0)
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #050607;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #30363a;
+}
+
+:root {
+    --bg: #050607;
+    --panel: #080a0c;
+    --panel2: #0c0f11;
+
+    --text: #e8e9ea;
+    --muted: #777f84;
+    --dim: #41484c;
+
+    --line: rgba(255,255,255,.085);
+
+    --blue: #8faeba;
+    --blue-dim: #516b76;
+
+    --red: #985050;
+
+    --max: 1440px;
+}
+
+
+/* =========================================================
+   공통
+========================================================= */
+
+.container {
+    width: min(calc(100% - 80px), var(--max));
+    margin: auto;
+}
+
+.section {
+    position: relative;
+    padding: 170px 0;
+}
+
+.eyebrow {
+    font-size: 10px;
+    letter-spacing: .16em;
+    color: var(--muted);
+}
+
+.mono {
+    font-family: monospace;
+}
+
+
+/* =========================================================
+   노이즈
+========================================================= */
+
+.noise {
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+    opacity: .035;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+}
+
+.scanlines {
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 9998;
+
+    opacity: .025;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 3px,
+            rgba(255,255,255,.12) 4px
+        );
+}
+
+.ambient {
+    position: fixed;
+
+    width: 600px;
+    height: 600px;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 0;
+
+    transform: translate(-50%, -50%);
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(75,110,125,.10),
+            transparent 68%
+        );
+}
+
+
+/* =========================================================
+   네비게이션
+========================================================= */
+
+nav {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 84px;
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.055);
+
+    background:
+        rgba(5,6,7,.70);
+
+    backdrop-filter: blur(20px);
+
+    transition:
+        background .4s ease,
+        border .4s ease;
+}
+
+.nav-inner {
+    width: min(calc(100% - 80px), var(--max));
+
+    margin: auto;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+.brand-kanji {
+    font-family:
+        "Noto Serif KR",
+        "Nanum Myeongjo",
+        serif;
+
+    font-size: 25px;
+
+    letter-spacing: -.1em;
+}
+
+.brand-name {
+    font-size: 9px;
+
+    letter-spacing: .23em;
+
+    color: #70777b;
+}
+
+.nav-links {
+    display: flex;
+
+    gap: 36px;
+}
+
+.nav-links a {
+    position: relative;
+
+    font-size: 10px;
+
+    letter-spacing: .12em;
+
+    color: #7c8387;
+
+    transition: color .3s ease;
+}
+
+.nav-links a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -7px;
+
+    width: 0;
+    height: 1px;
+
+    background: #91aab5;
+
+    transition: width .3s ease;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 9px;
+
+    letter-spacing: .1em;
+
+    color: #5f686d;
+}
+
+.status-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #6f8994;
+
+    box-shadow:
+        0 0 12px rgba(130,175,190,.7);
+
+    animation: pulse 3s infinite;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+}
+
+.hero-grid {
+    position: absolute;
+
+    inset: 0;
+
+    opacity: .13;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        );
+
+    background-size: 90px 90px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 90%
+        );
+}
+
+.hero-glow {
+    position: absolute;
+
+    width: 900px;
+    height: 900px;
+
+    right: -280px;
+    top: 0;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(65,100,115,.13),
+            transparent 68%
+        );
+
+    filter: blur(12px);
+
+    transition:
+        transform 1s ease;
+}
+
+.hero-content {
+    position: relative;
+
+    z-index: 2;
+}
+
+.hero-kicker {
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-bottom: 35px;
+
+    opacity: 0;
+
+    transform: translateY(20px);
+
+    animation:
+        reveal 1s .2s forwards;
+}
+
+.hero-kicker-line {
+    width: 40px;
+    height: 1px;
+
+    background: #708894;
+}
+
+.hero-kicker span {
+    font-size: 10px;
+
+    letter-spacing: .18em;
+
+    color: #77838a;
+}
+
+.hero-title {
+    position: relative;
+
+    font-family:
+        "Noto Serif KR",
+        "Nanum Myeongjo",
+        serif;
+
+    font-size:
+        clamp(105px, 17vw, 270px);
+
+    line-height: .78;
+
+    letter-spacing: -.13em;
+
+    font-weight: 500;
+
+    margin-left: -15px;
+
+    opacity: 0;
+
+    transform: translateY(50px);
+
+    animation:
+        reveal 1.4s .35s forwards;
+}
+
+.hero-title::after {
+    content: "SIMCHEUNG";
+
+    position: absolute;
+
+    left: 14px;
+    bottom: -31px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 10px;
+
+    letter-spacing: .52em;
+
+    color: #555d62;
+
+    font-weight: 400;
+}
+
+.hero-sub {
+    margin-top: 95px;
+
+    max-width: 650px;
+
+    font-size: 16px;
+
+    line-height: 2;
+
+    color: #858d91;
+
+    word-break: keep-all;
+
+    opacity: 0;
+
+    transform: translateY(25px);
+
+    animation:
+        reveal 1s .8s forwards;
+}
+
+.hero-sub strong {
+    color: #cbd1d4;
+
+    font-weight: 400;
+}
+
+.hero-bottom {
+    position: absolute;
+
+    bottom: 43px;
+
+    left: 0;
+    right: 0;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    z-index: 3;
+}
+
+.scroll-indicator {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    color: #535b60;
+
+    font-size: 9px;
+
+    letter-spacing: .14em;
+}
+
+.scroll-line {
+    position: relative;
+
+    width: 55px;
+    height: 1px;
+
+    overflow: hidden;
+
+    background: #333b40;
+}
+
+.scroll-line::after {
+    content: "";
+
+    position: absolute;
+
+    left: -100%;
+
+    width: 100%;
+    height: 100%;
+
+    background: #91aab5;
+
+    animation:
+        scan 2.6s infinite;
+}
+
+.hero-index {
+    font-family: monospace;
+
+    font-size: 10px;
+
+    color: #3d4549;
+}
+
+
+/* =========================================================
+   프로젝트
+========================================================= */
+
+.project-section {
+    background:
+        linear-gradient(
+            to bottom,
+            #050607,
+            #080a0c 50%,
+            #050607
+        );
+}
+
+.project-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-bottom: 75px;
+}
+
+.project-number {
+    margin-top: 10px;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    color: #4c555a;
+}
+
+.project-title {
+    font-size:
+        clamp(65px, 10vw, 150px);
+
+    letter-spacing: -.08em;
+
+    line-height: .82;
+
+    font-weight: 500;
+}
+
+.project-title span {
+    display: block;
+
+    margin-top: 27px;
+    margin-left: 8px;
+
+    color: #383f43;
+
+    font-size: .25em;
+
+    letter-spacing: .08em;
+}
+
+
+/* =========================================================
+   게임 화면
+========================================================= */
+
+.game-display {
+    position: relative;
+
+    min-height: 700px;
+
+    margin-top: 80px;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    background:
+        radial-gradient(
+            circle at 60% 40%,
+            rgba(65,100,115,.12),
+            transparent 50%
+        ),
+        #080a0c;
+
+    box-shadow:
+        0 40px 100px rgba(0,0,0,.22);
+}
+
+.game-display::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 4px,
+            rgba(255,255,255,.015) 5px
+        );
+}
+
+.display-top {
+    height: 46px;
+
+    padding: 0 20px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom:
+        1px solid var(--line);
+
+    color: #515a5f;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    letter-spacing: .07em;
+}
+
+.display-lights {
+    display: flex;
+
+    gap: 6px;
+}
+
+.display-lights i {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #30363a;
+}
+
+.display-lights i:first-child {
+    background: #708994;
+
+    box-shadow:
+        0 0 10px rgba(120,165,180,.5);
+}
+
+
+/* =========================================================
+   아카이브
+========================================================= */
+
+.archive-ui {
+    position: absolute;
+
+    left: 8%;
+    top: 13%;
+
+    width: 84%;
+    height: 73%;
+
+    display: grid;
+
+    grid-template-columns: 210px 1fr;
+
+    border:
+        1px solid rgba(150,180,190,.15);
+
+    background:
+        rgba(4,7,8,.87);
+
+    box-shadow:
+        0 40px 100px rgba(0,0,0,.65),
+        inset 0 0 80px rgba(70,100,110,.035);
+
+    transform:
+        perspective(1200px)
+        rotateX(1deg)
+        rotateY(-2deg);
+}
+
+.archive-sidebar {
+    padding: 24px 20px;
+
+    border-right:
+        1px solid rgba(255,255,255,.08);
+}
+
+.archive-logo {
+    margin-bottom: 40px;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    letter-spacing: .1em;
+
+    color: #8da4ad;
+}
+
+.archive-folder {
+    padding: 12px 0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.05);
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #4c565b;
+
+    transition: color .2s ease;
+}
+
+.archive-folder:hover,
+.archive-folder.active {
+    color: #a2bac4;
+}
+
+.archive-main {
+    position: relative;
+
+    padding: 28px 32px;
+}
+
+.archive-search {
+    height: 38px;
+
+    margin-bottom: 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 15px;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    color: #69747a;
+
+    font-family: monospace;
+
+    font-size: 10px;
+}
+
+.search-icon {
+    margin-right: 10px;
+
+    color: #718995;
+}
+
+.archive-result {
+    padding: 18px 0;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.055);
+}
+
+.archive-result-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #4d575c;
+}
+
+.archive-result-title {
+    font-size: 14px;
+
+    color: #a8b0b4;
+}
+
+.archive-result-text {
+    max-width: 620px;
+
+    margin-top: 7px;
+
+    font-size: 10px;
+
+    line-height: 1.8;
+
+    color: #50585d;
+
+    word-break: keep-all;
+}
+
+.archive-warning {
+    position: absolute;
+
+    right: 30px;
+    bottom: 30px;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #895050;
+
+    letter-spacing: .04em;
+
+    transition: opacity .08s ease;
+}
+
+
+/* =========================================================
+   프로젝트 설명
+========================================================= */
+
+.project-info {
+    display: grid;
+
+    grid-template-columns: 1.2fr .8fr;
+
+    gap: 100px;
+
+    padding-top: 80px;
+}
+
+.project-description {
+    max-width: 750px;
+
+    font-size: 22px;
+
+    line-height: 1.8;
+
+    letter-spacing: -.04em;
+
+    color: #9da4a8;
+
+    word-break: keep-all;
+}
+
+.project-description strong {
+    color: #e0e3e4;
+
+    font-weight: 400;
+}
+
+.meta-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    border-top:
+        1px solid var(--line);
+}
+
+.meta {
+    padding: 20px 0;
+
+    border-bottom:
+        1px solid var(--line);
+}
+
+.meta:nth-child(odd) {
+    margin-right: 25px;
+}
+
+.meta-label {
+    margin-bottom: 9px;
+
+    font-size: 8px;
+
+    letter-spacing: .14em;
+
+    color: #4c5559;
+}
+
+.meta-value {
+    font-size: 11px;
+
+    color: #8d969a;
+}
+
+
+/* =========================================================
+   기록 보관소
+========================================================= */
+
+.archive-section {
+    padding: 180px 0;
+
+    border-top:
+        1px solid var(--line);
+
+    border-bottom:
+        1px solid var(--line);
+
+    background:
+        #060809;
+}
+
+.archive-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-bottom: 70px;
+}
+
+.archive-heading h2 {
+    margin-top: 15px;
+
+    font-size:
+        clamp(55px, 8vw, 115px);
+
+    font-weight: 400;
+
+    letter-spacing: -.08em;
+
+    line-height: .85;
+}
+
+.archive-heading h2 span {
+    color: #3c4347;
+}
+
+.records {
+    border-top:
+        1px solid var(--line);
+}
+
+.record {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns: 170px 1fr 130px;
+
+    gap: 40px;
+
+    align-items: center;
+
+    min-height: 105px;
+
+    padding: 22px 0;
+
+    border-bottom:
+        1px solid var(--line);
+
+    cursor: pointer;
+
+    transition:
+        padding .35s ease,
+        background .35s ease;
+}
+
+.record:hover {
+    padding-left: 18px;
+
+    background:
+        rgba(255,255,255,.018);
+}
+
+.record-date {
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #4c5559;
+}
+
+.record-title {
+    font-size: 15px;
+
+    color: #a8afb2;
+}
+
+.record-description {
+    margin-top: 7px;
+
+    font-size: 10px;
+
+    color: #565f63;
+}
+
+.record-status {
+    text-align: right;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #4e666f;
+}
+
+.record-status.red {
+    color: #7d4b4b;
+}
+
+
+/* =========================================================
+   기록 팝업
+========================================================= */
+
+.record-modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 5000;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px;
+
+    background:
+        rgba(0,0,0,.78);
+
+    backdrop-filter:
+        blur(12px);
+}
+
+.record-modal.active {
+    display: flex;
+}
+
+.modal-window {
+    position: relative;
+
+    width: min(700px, 100%);
+
+    max-height: 80vh;
+
+    overflow: auto;
+
+    padding: 45px;
+
+    border:
+        1px solid rgba(150,180,190,.15);
+
+    background:
+        #080a0c;
+
+    box-shadow:
+        0 50px 150px rgba(0,0,0,.7);
+}
+
+.modal-close {
+    position: absolute;
+
+    top: 20px;
+    right: 25px;
+
+    border: 0;
+
+    background: none;
+
+    color: #687278;
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+.modal-label {
+    margin-bottom: 20px;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #53636a;
+}
+
+.modal-title {
+    margin-bottom: 25px;
+
+    font-size: 30px;
+
+    font-weight: 400;
+
+    letter-spacing: -.05em;
+}
+
+.modal-text {
+    font-size: 14px;
+
+    line-height: 2;
+
+    color: #777f84;
+
+    white-space: pre-line;
+}
+
+
+/* =========================================================
+   개발 현황
+========================================================= */
+
+.progress-section {
+    padding: 180px 0;
+}
+
+.progress-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 80px;
+}
+
+.progress-header h2 {
+    font-size:
+        clamp(55px, 8vw, 110px);
+
+    font-weight: 400;
+
+    letter-spacing: -.08em;
+
+    line-height: .85;
+}
+
+.progress-header h2 span {
+    color: #3d4448;
+}
+
+.progress-list {
+    border-top:
+        1px solid var(--line);
+}
+
+.progress-item {
+    display: grid;
+
+    grid-template-columns: 200px 1fr 80px;
+
+    gap: 35px;
+
+    align-items: center;
+
+    padding: 28px 0;
+
+    border-bottom:
+        1px solid var(--line);
+}
+
+.progress-name {
+    font-size: 13px;
+
+    color: #858e92;
+}
+
+.progress-bar {
+    height: 2px;
+
+    background: #20272b;
+
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #536d78,
+            #9ab3bd
+        );
+
+    transform-origin: left;
+
+    animation:
+        progressIn 1.5s ease forwards;
+}
+
+.progress-percent {
+    text-align: right;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    color: #606b70;
+}
+
+
+/* =========================================================
+   개발 이미지
+========================================================= */
+
+.gallery-section {
+    padding: 180px 0;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #050607,
+            #080a0c
+        );
+}
+
+.gallery-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-bottom: 70px;
+}
+
+.gallery-header h2 {
+    margin-top: 15px;
+
+    font-size:
+        clamp(55px, 8vw, 110px);
+
+    font-weight: 400;
+
+    letter-spacing: -.08em;
+
+    line-height: .85;
+}
+
+.gallery-header h2 span {
+    color: #3c4347;
+}
+
+.gallery-grid {
+    display: grid;
+
+    grid-template-columns:
+        1.4fr .8fr .8fr;
+
+    grid-auto-rows: 250px;
+
+    gap: 12px;
+}
+
+.gallery-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(255,255,255,.07);
+
+    background:
+        #0b0e10;
+
+    cursor: pointer;
+}
+
+.gallery-card.large {
+    grid-row: span 2;
+}
+
+.gallery-placeholder {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(75,105,115,.12),
+            transparent 65%
+        );
+
+    color: #4b565b;
+
+    transition:
+        transform .7s ease,
+        background .7s ease;
+}
+
+.gallery-card:hover .gallery-placeholder {
+    transform: scale(1.04);
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(80,115,125,.19),
+            transparent 65%
+        );
+}
+
+.gallery-placeholder-number {
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #67777e;
+}
+
+.gallery-placeholder-title {
+    font-size: 12px;
+
+    color: #566167;
+}
+
+.gallery-label {
+    position: absolute;
+
+    left: 15px;
+    bottom: 14px;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #657178;
+
+    letter-spacing: .05em;
+}
+
+
+/* =========================================================
+   철학
+========================================================= */
+
+.philosophy {
+    min-height: 90vh;
+
+    display: flex;
+
+    align-items: center;
+
+    border-top:
+        1px solid var(--line);
+
+    border-bottom:
+        1px solid var(--line);
+}
+
+.philosophy-inner {
+    display: grid;
+
+    grid-template-columns: 1fr 2fr;
+
+    gap: 80px;
+}
+
+.philosophy-label {
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #4d565b;
+}
+
+.philosophy-title {
+    font-size:
+        clamp(55px, 8vw, 125px);
+
+    line-height: .9;
+
+    letter-spacing: -.09em;
+
+    font-weight: 400;
+}
+
+.philosophy-title span {
+    color: #3b4246;
+}
+
+.philosophy-text {
+    max-width: 600px;
+
+    margin-top: 70px;
+
+    font-size: 17px;
+
+    line-height: 2.1;
+
+    color: #70787c;
+
+    word-break: keep-all;
+}
+
+.philosophy-text strong {
+    color: #c0c7ca;
+
+    font-weight: 400;
+}
+
+
+/* =========================================================
+   팀
+========================================================= */
+
+.team-section {
+    padding: 180px 0;
+}
+
+.team-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 80px;
+}
+
+.team-header h2 {
+    font-size:
+        clamp(55px, 8vw, 110px);
+
+    font-weight: 400;
+
+    letter-spacing: -.08em;
+
+    line-height: .85;
+}
+
+.team-header h2 span {
+    color: #3d4448;
+}
+
+.team-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    border-top:
+        1px solid var(--line);
+
+    border-left:
+        1px solid var(--line);
+}
+
+.team-card {
+    min-height: 310px;
+
+    padding: 32px;
+
+    border-right:
+        1px solid var(--line);
+
+    border-bottom:
+        1px solid var(--line);
+
+    transition:
+        background .4s ease;
+}
+
+.team-card:hover {
+    background:
+        rgba(255,255,255,.018);
+}
+
+.team-number {
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #434b4f;
+
+    margin-bottom: 80px;
+}
+
+.team-role {
+    margin-bottom: 8px;
+
+    font-size: 9px;
+
+    letter-spacing: .13em;
+
+    color: #56636a;
+}
+
+.team-name {
+    margin-bottom: 20px;
+
+    font-size: 24px;
+
+    letter-spacing: -.05em;
+
+    color: #b8c0c3;
+}
+
+.team-description {
+    max-width: 260px;
+
+    font-size: 11px;
+
+    line-height: 1.9;
+
+    color: #5f686d;
+
+    word-break: keep-all;
+}
+
+
+/* =========================================================
+   개발일지
+========================================================= */
+
+.devlog-section {
+    padding: 180px 0;
+
+    border-top:
+        1px solid var(--line);
+
+    background:
+        #07090a;
+}
+
+.devlog-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 70px;
+}
+
+.devlog-header h2 {
+    margin-top: 15px;
+
+    font-size:
+        clamp(55px, 8vw, 110px);
+
+    font-weight: 400;
+
+    letter-spacing: -.08em;
+
+    line-height: .85;
+}
+
+.devlog-header h2 span {
+    color: #3c4347;
+}
+
+.devlog-list {
+    border-top:
+        1px solid var(--line);
+}
+
+.devlog-item {
+    display: grid;
+
+    grid-template-columns: 150px 1fr 80px;
+
+    gap: 30px;
+
+    align-items: center;
+
+    min-height: 95px;
+
+    border-bottom:
+        1px solid var(--line);
+}
+
+.devlog-date {
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #4d565b;
+}
+
+.devlog-title {
+    font-size: 14px;
+
+    color: #8f979b;
+}
+
+.devlog-category {
+    text-align: right;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #52646b;
+}
+
+
+/* =========================================================
+   최신 소식
+========================================================= */
+
+.news-section {
+    padding: 180px 0;
+}
+
+.news-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 70px;
+}
+
+.news-header h2 {
+    margin-top: 15px;
+
+    font-size:
+        clamp(55px, 8vw, 110px);
+
+    font-weight: 400;
+
+    letter-spacing: -.08em;
+
+    line-height: .85;
+}
+
+.news-header h2 span {
+    color: #3d4448;
+}
+
+.news-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+}
+
+.news-card {
+    min-height: 270px;
+
+    padding: 30px;
+
+    border:
+        1px solid var(--line);
+
+    background:
+        rgba(255,255,255,.012);
+
+    transition:
+        background .35s ease,
+        transform .35s ease;
+}
+
+.news-card:hover {
+    background:
+        rgba(255,255,255,.025);
+
+    transform:
+        translateY(-5px);
+}
+
+.news-date {
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #4c555a;
+
+    margin-bottom: 65px;
+}
+
+.news-title {
+    margin-bottom: 14px;
+
+    font-size: 17px;
+
+    color: #a6adb0;
+}
+
+.news-text {
+    font-size: 11px;
+
+    line-height: 1.8;
+
+    color: #5d666b;
+
+    word-break: keep-all;
+}
+
+
+/* =========================================================
+   스팀 / 출시
+========================================================= */
+
+.release-section {
+    position: relative;
+
+    min-height: 70vh;
+
+    display: flex;
+
+    align-items: center;
+
+    border-top:
+        1px solid var(--line);
+
+    border-bottom:
+        1px solid var(--line);
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(65,95,105,.09),
+            transparent 65%
+        );
+}
+
+.release-bg {
+    position: absolute;
+
+    inset: 0;
+
+    opacity: .35;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(130,160,170,.025) 50%,
+            transparent 100%
+        );
+}
+
+.release-inner {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+}
+
+.release-label {
+    margin-bottom: 35px;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    color: #4f5a60;
+
+    letter-spacing: .12em;
+}
+
+.release-title {
+    max-width: 1000px;
+
+    font-size:
+        clamp(60px, 10vw, 150px);
+
+    line-height: .85;
+
+    letter-spacing: -.1em;
+
+    font-weight: 400;
+}
+
+.release-title span {
+    color: #3c4347;
+}
+
+.release-description {
+    max-width: 600px;
+
+    margin-top: 55px;
+
+    font-size: 15px;
+
+    line-height: 2;
+
+    color: #697276;
+
+    word-break: keep-all;
+}
+
+.steam-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 210px;
+
+    height: 55px;
+
+    margin-top: 45px;
+
+    border:
+        1px solid rgba(150,180,190,.2);
+
+    color: #9eafb6;
+
+    font-size: 10px;
+
+    letter-spacing: .12em;
+
+    transition:
+        background .3s ease,
+        border .3s ease,
+        color .3s ease;
+}
+
+.steam-button:hover {
+    background:
+        rgba(145,175,185,.08);
+
+    border-color:
+        rgba(160,190,200,.4);
+
+    color: white;
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact {
+    min-height: 80vh;
+
+    display: flex;
+
+    align-items: center;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(60,90,100,.08),
+            transparent 65%
+        );
+}
+
+.contact-small {
+    margin-bottom: 35px;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    letter-spacing: .12em;
+
+    color: #4d575c;
+}
+
+.contact-title {
+    max-width: 1000px;
+
+    font-size:
+        clamp(65px, 11vw, 170px);
+
+    line-height: .86;
+
+    letter-spacing: -.1em;
+
+    font-weight: 400;
+}
+
+.contact-title span {
+    color: #3c4347;
+}
+
+.contact-bottom {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-top: 100px;
+}
+
+.contact-links {
+    display: flex;
+
+    gap: 40px;
+}
+
+.contact-links a {
+    font-size: 10px;
+
+    letter-spacing: .1em;
+
+    color: #737c81;
+
+    transition:
+        color .3s ease;
+}
+
+.contact-links a:hover {
+    color: white;
+}
+
+.contact-location {
+    text-align: right;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    line-height: 1.9;
+
+    color: #424a4e;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    padding: 30px 0;
+
+    border-top:
+        1px solid var(--line);
+}
+
+.footer-inner {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.footer-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+.footer-logo {
+    font-family:
+        "Noto Serif KR",
+        "Nanum Myeongjo",
+        serif;
+
+    font-size: 17px;
+
+    letter-spacing: -.08em;
+}
+
+.footer-copy {
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #41484c;
+}
+
+.footer-right {
+    font-family: monospace;
+
+    font-size: 8px;
+
+    color: #41484c;
+}
+
+
+/* =========================================================
+   등장
+========================================================= */
+
+.reveal {
+    opacity: 0;
+
+    transform: translateY(45px);
+
+    transition:
+        opacity 1s ease,
+        transform 1s cubic-bezier(.16,1,.3,1);
+}
+
+.reveal.visible {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   키프레임
+========================================================= */
+
+@keyframes reveal {
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+@keyframes scan {
+
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: .5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+@keyframes progressIn {
+
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+
+}
+
+
+/* =========================================================
+   태블릿
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .container,
+    .nav-inner {
+        width:
+            min(
+                calc(100% - 40px),
+                var(--max)
             );
-        }
-
-        .nav-logo {
-            font-size: 14px;
-            letter-spacing: 0.25em;
-            color: #fff;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 35px;
-            font-size: 11px;
-            letter-spacing: 0.18em;
-            color: var(--muted);
-        }
-
-        .nav-links a {
-            transition: color .3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #fff;
-        }
-
-        /* --------------------------------
-           Hero
-        -------------------------------- */
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 120px 6vw;
-        }
-
-        .hero-content {
-            width: 100%;
-            max-width: 1400px;
-        }
-
-        .hero-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 42px;
-
-            font-size: 10px;
-            letter-spacing: 0.3em;
-            color: var(--muted);
-            text-transform: uppercase;
-        }
-
-        .status {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--blue);
-            box-shadow: 0 0 15px rgba(139,184,216,.6);
-        }
-
-        .hero-title {
-            font-size: clamp(75px, 13vw, 190px);
-            font-weight: 500;
-            line-height: .82;
-            letter-spacing: -0.055em;
-        }
-
-        .hero-title span {
-            display: block;
-        }
-
-        .hero-title .kr {
-            font-family: "Noto Sans KR", sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.1em;
-        }
-
-        .hero-subtitle {
-            margin-top: 52px;
-            max-width: 520px;
-
-            font-size: 13px;
-            line-height: 2;
-            letter-spacing: .08em;
-            color: var(--muted);
-        }
-
-        .hero-line {
-            position: absolute;
-            left: 6vw;
-            right: 6vw;
-            bottom: 80px;
-            height: 1px;
-            background: var(--line);
-        }
-
-        .scroll {
-            position: absolute;
-            bottom: 45px;
-            right: 6vw;
-
-            font-size: 9px;
-            letter-spacing: .25em;
-            color: var(--muted);
-        }
-
-        /* --------------------------------
-           Sections
-        -------------------------------- */
-
-        section {
-            padding: 160px 6vw;
-            position: relative;
-        }
-
-        .section-inner {
-            max-width: 1400px;
-            margin: auto;
-        }
-
-        .section-label {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-
-            margin-bottom: 70px;
-
-            font-size: 10px;
-            letter-spacing: .25em;
-            color: var(--muted);
-            text-transform: uppercase;
-        }
-
-        .section-label::before {
-            content: "";
-            width: 25px;
-            height: 1px;
-            background: var(--blue);
-        }
-
-        /* --------------------------------
-           Project
-        -------------------------------- */
-
-        .project {
-            border-top: 1px solid var(--line);
-            border-bottom: 1px solid var(--line);
-            padding: 50px 0;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 60px;
-        }
-
-        .project-number {
-            font-size: 12px;
-            color: var(--muted);
-            letter-spacing: .15em;
-        }
-
-        .project-title {
-            font-size: clamp(38px, 5vw, 72px);
-            font-weight: 500;
-            letter-spacing: -.04em;
-            margin-bottom: 25px;
-        }
-
-        .project-description {
-            max-width: 620px;
-            font-size: 14px;
-            line-height: 2;
-            color: #8c9196;
-        }
-
-        .project-tags {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            border: 1px solid var(--line);
-            padding: 8px 13px;
-            font-size: 9px;
-            letter-spacing: .15em;
-            color: var(--muted);
-        }
-
-        .project-image {
-            margin-top: 55px;
-            height: 500px;
-            position: relative;
-            overflow: hidden;
-
-            background:
-                linear-gradient(
-                    120deg,
-                    #101416,
-                    #080a0b 55%,
-                    #111b22
-                );
-
-            border: 1px solid var(--line);
-        }
-
-        .monitor {
-            position: absolute;
-            width: 55%;
-            height: 58%;
-            left: 22%;
-            top: 17%;
-
-            background: #060708;
-            border: 7px solid #15181b;
-            box-shadow:
-                0 30px 80px rgba(0,0,0,.8),
-                0 0 80px rgba(70,120,150,.07);
-        }
-
-        .monitor::before {
-            content: "";
-            position: absolute;
-            inset: 10px;
-            background:
-                linear-gradient(
-                    rgba(130,180,210,.06) 1px,
-                    transparent 1px
-                ),
-                linear-gradient(
-                    90deg,
-                    rgba(130,180,210,.06) 1px,
-                    transparent 1px
-                );
-            background-size: 30px 30px;
-        }
-
-        .screen-text {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            font-size: 10px;
-            color: rgba(160,205,225,.55);
-            letter-spacing: .12em;
-            line-height: 2;
-        }
-
-        .desk {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 25%;
-            background: #101214;
-            border-top: 1px solid rgba(255,255,255,.04);
-        }
-
-        /* --------------------------------
-           About
-        -------------------------------- */
-
-        .about {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 80px;
-        }
-
-        .about-title {
-            font-size: clamp(35px, 5vw, 70px);
-            line-height: 1;
-            letter-spacing: -.05em;
-        }
-
-        .about-text {
-            max-width: 680px;
-            font-size: 16px;
-            line-height: 2.2;
-            color: #92979c;
-        }
-
-        .about-text strong {
-            color: #dfe3e6;
-            font-weight: 400;
-        }
-
-        /* --------------------------------
-           Philosophy
-        -------------------------------- */
-
-        .statement {
-            border-top: 1px solid var(--line);
-            padding-top: 70px;
-            font-size: clamp(30px, 5vw, 72px);
-            line-height: 1.25;
-            letter-spacing: -.045em;
-            max-width: 1100px;
-        }
-
-        .statement em {
-            font-style: normal;
-            color: var(--blue);
-        }
-
-        /* --------------------------------
-           Contact
-        -------------------------------- */
-
-        .contact {
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-        }
-
-        .contact-title {
-            font-size: clamp(50px, 9vw, 130px);
-            line-height: .9;
-            letter-spacing: -.06em;
-        }
-
-        .contact-links {
-            display: flex;
-            gap: 30px;
-            margin-top: 55px;
-            flex-wrap: wrap;
-        }
-
-        .contact-link {
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--line);
-            font-size: 11px;
-            letter-spacing: .15em;
-            color: var(--muted);
-            transition: all .3s ease;
-        }
-
-        .contact-link:hover {
-            color: #fff;
-            border-color: var(--blue);
-        }
-
-        /* --------------------------------
-           Footer
-        -------------------------------- */
-
-        footer {
-            padding: 40px 6vw;
-            border-top: 1px solid var(--line);
-
-            display: flex;
-            justify-content: space-between;
-
-            font-size: 9px;
-            letter-spacing: .18em;
-            color: #555a5f;
-        }
-
-        /* --------------------------------
-           Reveal animation
-        -------------------------------- */
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(35px);
-            transition:
-                opacity 1s ease,
-                transform 1s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --------------------------------
-           Mobile
-        -------------------------------- */
-
-        @media (max-width: 700px) {
-
-            nav {
-                height: 65px;
-                padding: 0 25px;
-            }
-
-            .nav-links {
-                gap: 15px;
-                font-size: 8px;
-            }
-
-            .hero {
-                padding: 100px 25px;
-            }
-
-            .hero-title {
-                font-size: 22vw;
-            }
-
-            .hero-subtitle {
-                font-size: 11px;
-            }
-
-            .hero-line {
-                left: 25px;
-                right: 25px;
-            }
-
-            section {
-                padding: 100px 25px;
-            }
-
-            .project {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-
-            .project-image {
-                height: 300px;
-            }
-
-            .about {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .contact {
-                min-height: 50vh;
-            }
-
-            footer {
-                padding: 30px 25px;
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-    </style>
+    }
+
+    .nav-links,
+    .nav-status {
+        display: none;
+    }
+
+    .hero-title {
+        font-size: 25vw;
+    }
+
+    .hero-sub {
+        max-width: 90%;
+
+        font-size: 14px;
+    }
+
+    .section {
+        padding: 120px 0;
+    }
+
+    .game-display {
+        min-height: 550px;
+    }
+
+    .archive-ui {
+        left: 5%;
+
+        width: 90%;
+
+        grid-template-columns:
+            130px 1fr;
+    }
+
+    .archive-sidebar {
+        padding: 20px 13px;
+    }
+
+    .archive-main {
+        padding: 20px;
+    }
+
+    .project-info {
+        grid-template-columns: 1fr;
+
+        gap: 60px;
+    }
+
+    .record {
+        grid-template-columns:
+            120px 1fr;
+
+        gap: 20px;
+    }
+
+    .record-status {
+        display: none;
+    }
+
+    .progress-item {
+        grid-template-columns:
+            130px 1fr 55px;
+    }
+
+    .gallery-grid {
+        grid-template-columns:
+            1fr 1fr;
+
+        grid-auto-rows:
+            220px;
+    }
+
+    .gallery-card.large {
+        grid-row: span 2;
+    }
+
+    .philosophy-inner {
+        grid-template-columns: 1fr;
+
+        gap: 45px;
+    }
+
+    .philosophy-text {
+        margin-top: 0;
+    }
+
+    .team-grid {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .news-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .contact-bottom {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 50px;
+    }
+
+    .contact-location {
+        text-align: left;
+    }
+
+}
+
+
+/* =========================================================
+   모바일
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .container,
+    .nav-inner {
+        width:
+            calc(100% - 30px);
+    }
+
+    .brand-name {
+        display: none;
+    }
+
+    .hero-title {
+        font-size: 28vw;
+    }
+
+    .hero-title::after {
+        font-size: 8px;
+
+        letter-spacing: .35em;
+
+        bottom: -22px;
+    }
+
+    .hero-sub {
+        font-size: 13px;
+
+        line-height: 1.9;
+    }
+
+    .hero-bottom {
+        bottom: 25px;
+    }
+
+    .game-display {
+        min-height: 470px;
+    }
+
+    .display-top {
+        font-size: 7px;
+    }
+
+    .archive-ui {
+        top: 9%;
+
+        height: 78%;
+
+        grid-template-columns: 1fr;
+    }
+
+    .archive-sidebar {
+        display: none;
+    }
+
+    .archive-main {
+        padding: 18px;
+    }
+
+    .archive-result-title {
+        font-size: 12px;
+    }
+
+    .project-description {
+        font-size: 18px;
+    }
+
+    .meta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .meta:nth-child(odd) {
+        margin-right: 0;
+    }
+
+    .archive-heading,
+    .progress-header,
+    .gallery-header,
+    .team-header,
+    .devlog-header,
+    .news-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 25px;
+    }
+
+    .record {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+
+        padding: 25px 0;
+    }
+
+    .record-title {
+        font-size: 14px;
+    }
+
+    .progress-item {
+        grid-template-columns:
+            100px 1fr 45px;
+
+        gap: 15px;
+    }
+
+    .progress-name {
+        font-size: 11px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+
+        grid-auto-rows:
+            230px;
+    }
+
+    .gallery-card.large {
+        grid-row: span 1;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-card {
+        min-height: 260px;
+    }
+
+    .devlog-item {
+        grid-template-columns:
+            90px 1fr;
+
+        gap: 15px;
+    }
+
+    .devlog-category {
+        display: none;
+    }
+
+    .news-card {
+        min-height: 220px;
+    }
+
+    .contact-links {
+        flex-wrap: wrap;
+
+        gap: 20px;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+    .modal-window {
+        padding: 30px 22px;
+    }
+
+}
+
+</style>
 </head>
+
 
 <body>
 
-    <div class="noise"></div>
-    <div class="ambient"></div>
+<!-- 화면 효과 -->
+<div class="noise"></div>
+<div class="scanlines"></div>
+<div class="ambient" id="ambient"></div>
 
-    <!-- Navigation -->
 
-    <nav>
-        <a href="#" class="nav-logo">深層 / STUDIO</a>
+<!-- =========================================================
+     NAV
+========================================================= -->
+
+<nav id="navbar">
+
+    <div class="nav-inner">
+
+        <a href="#top" class="brand">
+
+            <div class="brand-kanji">
+                深層
+            </div>
+
+            <div class="brand-name">
+                SIMCHEUNG STUDIO
+            </div>
+
+        </a>
+
 
         <div class="nav-links">
-            <a href="#project">PROJECT</a>
-            <a href="#about">ABOUT</a>
-            <a href="#contact">CONTACT</a>
+
+            <a href="#project">
+                프로젝트
+            </a>
+
+            <a href="#archive">
+                기록
+            </a>
+
+            <a href="#development">
+                개발 현황
+            </a>
+
+            <a href="#studio">
+                스튜디오
+            </a>
+
+            <a href="#contact">
+                문의
+            </a>
+
         </div>
-    </nav>
 
 
-    <!-- Hero -->
+        <div class="nav-status">
 
-    <main>
+            <span class="status-dot"></span>
 
-        <section class="hero">
+            현재 개발 중
 
-            <div class="hero-content">
+        </div>
 
-                <div class="hero-meta reveal">
-                    <span class="status"></span>
-                    INDEPENDENT GAME STUDIO
+    </div>
+
+</nav>
+
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero" id="top">
+
+    <div class="hero-grid"></div>
+
+    <div class="hero-glow"></div>
+
+
+    <div class="container hero-content">
+
+        <div class="hero-kicker">
+
+            <div class="hero-kicker-line"></div>
+
+            <span>
+                독립 게임 개발 스튜디오
+            </span>
+
+        </div>
+
+
+        <h1 class="hero-title">
+            深層
+        </h1>
+
+
+        <p class="hero-sub">
+
+            우리는 <strong>숨겨진 것</strong>에 관한
+            게임을 만듭니다.
+
+            <br>
+
+            기록 아래에 묻힌 이야기,
+            잊힌 장소,
+            그리고 사람들이 기억하지 않기로 한 것들.
+
+        </p>
+
+    </div>
+
+
+    <div class="container hero-bottom">
+
+        <div class="scroll-indicator">
+
+            <div class="scroll-line"></div>
+
+            스크롤하여 탐색
+
+        </div>
+
+
+        <div class="hero-index">
+            01 / 10
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PROJECT
+========================================================= -->
+
+<section class="section project-section" id="project">
+
+    <div class="container">
+
+
+        <div class="project-header reveal">
+
+            <div>
+
+                <div class="eyebrow">
+                    현재 개발 프로젝트
                 </div>
 
-                <h1 class="hero-title reveal">
-                    <span class="kr">深層</span>
-                    <span>STUDIO</span>
-                </h1>
-
-                <p class="hero-subtitle reveal">
-                    We create games about the things
-                    hidden beneath what we know.
-                    <br><br>
-                    우리가 알고 있는 것의 아래에 숨겨진
-                    이야기를 탐구합니다.
-                </p>
+                <div class="project-number">
+                    프로젝트 / 001
+                </div>
 
             </div>
 
-            <div class="hero-line"></div>
-
-            <div class="scroll">
-                SCROLL TO EXPLORE
+            <div class="project-number">
+                상태 — 개발 중
             </div>
 
-        </section>
+        </div>
 
 
-        <!-- Project -->
+        <h2 class="project-title reveal">
 
-        <section id="project">
+            NO INDEX
 
-            <div class="section-inner">
+            <span>
+                사라진 기록을 추적하는 조사
+            </span>
 
-                <div class="section-label reveal">
-                    CURRENT PROJECT
+        </h2>
+
+
+        <div class="game-display reveal">
+
+
+            <div class="display-top">
+
+                <div class="display-lights">
+                    <i></i>
+                    <i></i>
+                    <i></i>
                 </div>
 
-                <div class="project reveal">
+                기록 보관 터미널 / 2009.04.17
 
-                    <div>
-                        <div class="project-number">
-                            PROJECT / 001
-                        </div>
+                <div>
+                    연결 상태 — 불안정
+                </div>
+
+            </div>
+
+
+            <div class="archive-ui">
+
+
+                <aside class="archive-sidebar">
+
+                    <div class="archive-logo">
+                        기록 보관소_01
                     </div>
 
-                    <div>
+                    <div class="archive-folder active">
+                        / 사건 기록
+                    </div>
 
-                        <h2 class="project-title">
-                            UNRECORDED
-                        </h2>
+                    <div class="archive-folder">
+                        / 사용자
+                    </div>
 
-                        <p class="project-description">
-                            오래된 인터넷 아카이브와 사라진 기록을 추적하며
-                            숨겨진 사건의 진실을 밝혀내는
-                            미스터리 조사 게임.
-                            <br><br>
-                            기록은 사라졌지만,
-                            흔적까지 사라진 것은 아니다.
-                        </p>
+                    <div class="archive-folder">
+                        / 삭제됨
+                    </div>
 
-                        <div class="project-tags">
-                            <span class="tag">MYSTERY</span>
-                            <span class="tag">INVESTIGATION</span>
-                            <span class="tag">PSYCHOLOGICAL HORROR</span>
-                            <span class="tag">ADVENTURE</span>
+                    <div class="archive-folder">
+                        / 미확인
+                    </div>
+
+                    <div class="archive-folder">
+                        / 시스템
+                    </div>
+
+                </aside>
+
+
+                <main class="archive-main">
+
+
+                    <div class="archive-search">
+
+                        <span class="search-icon">
+                            [ 검색 ]
+                        </span>
+
+                        0417 사건
+
+                    </div>
+
+
+                    <div class="archive-result">
+
+                        <div class="archive-result-top">
+
+                            <span>
+                                기록_001
+                            </span>
+
+                            <span>
+                                2009.04.17
+                            </span>
+
                         </div>
 
-                        <div class="project-image">
+                        <div class="archive-result-title">
+                            지역 사건 보고서
+                        </div>
 
-                            <div class="monitor">
-
-                                <div class="screen-text">
-                                    ARCHIVE SEARCH<br>
-                                    ----------------------<br>
-                                    QUERY: UNKNOWN<br><br>
-                                    RESULT FOUND: 01<br><br>
-                                    FILE STATUS: DELETED<br>
-                                    LAST ACCESS: 03:17:42
-                                </div>
-
-                            </div>
-
-                            <div class="desk"></div>
-
+                        <div class="archive-result-text">
+                            원본 문서는 공개 기록 보관소에서
+                            삭제된 것으로 확인됩니다.
                         </div>
 
                     </div>
 
-                </div>
+
+                    <div class="archive-result">
+
+                        <div class="archive-result-top">
+
+                            <span>
+                                기록_002
+                            </span>
+
+                            <span>
+                                2009.04.19
+                            </span>
+
+                        </div>
+
+                        <div class="archive-result-title">
+                            사용자 토론 게시물
+                        </div>
+
+                        <div class="archive-result-text">
+                            여러 개의 답글이 남아 있습니다.
+                            그러나 원래 작성자는 존재하지 않습니다.
+                        </div>
+
+                    </div>
+
+
+                    <div class="archive-result">
+
+                        <div class="archive-result-top">
+
+                            <span>
+                                기록_003
+                            </span>
+
+                            <span>
+                                확인 불가
+                            </span>
+
+                        </div>
+
+                        <div class="archive-result-title">
+                            █████████████████████
+                        </div>
+
+                        <div class="archive-result-text">
+                            원래 시스템에서는
+                            색인되지 않은 기록입니다.
+                        </div>
+
+                    </div>
+
+
+                    <div class="archive-warning">
+                        경고 — 데이터 무결성 손상
+                    </div>
+
+
+                </main>
 
             </div>
 
-        </section>
+        </div>
 
 
-        <!-- About -->
+        <div class="project-info reveal">
 
-        <section id="about">
 
-            <div class="section-inner">
+            <p class="project-description">
 
-                <div class="section-label reveal">
-                    ABOUT US
-                </div>
+                <strong>NO INDEX</strong>는
+                잊힌 사건의 흔적을 추적하는
+                미스터리 조사 게임입니다.
 
-                <div class="about">
+                <br><br>
 
-                    <h2 class="about-title reveal">
-                        LOOK<br>
-                        DEEPER.
-                    </h2>
+                오래된 기록을 검색하고,
+                서로 다른 자료를 비교하고,
+                더 이상 존재해서는 안 되는 정보를 따라가세요.
 
-                    <div class="about-text reveal">
+                <br><br>
 
-                        <p>
-                            <strong>深層 STUDIO</strong>는
-                            작지만 분명한 이야기를 만드는
-                            독립 게임 스튜디오입니다.
-                        </p>
+                기록된 것과
+                <strong>지워진 것</strong> 사이 어딘가에
+                진실이 남아 있습니다.
 
-                        <br>
+            </p>
 
-                        <p>
-                            우리는 단순히 무서운 것을 보여주는 대신,
-                            플레이어가 직접 발견하고 의심하고
-                            해석할 수 있는 경험을 만들고자 합니다.
-                        </p>
 
-                        <br>
+            <div class="meta-grid">
 
-                        <p>
-                            사라진 기록,
-                            설명되지 않는 흔적,
-                            누군가 의도적으로 숨긴 진실.
-                            <br>
-                            우리가 만드는 이야기는
-                            그곳에서 시작됩니다.
-                        </p>
 
+                <div class="meta">
+
+                    <div class="meta-label">
+                        장르
+                    </div>
+
+                    <div class="meta-value">
+                        미스터리 / 심리 공포
                     </div>
 
                 </div>
 
+
+                <div class="meta">
+
+                    <div class="meta-label">
+                        플랫폼
+                    </div>
+
+                    <div class="meta-value">
+                        PC
+                    </div>
+
+                </div>
+
+
+                <div class="meta">
+
+                    <div class="meta-label">
+                        개발 상태
+                    </div>
+
+                    <div class="meta-value">
+                        개발 중
+                    </div>
+
+                </div>
+
+
+                <div class="meta">
+
+                    <div class="meta-label">
+                        출시
+                    </div>
+
+                    <div class="meta-value">
+                        미정
+                    </div>
+
+                </div>
+
+
             </div>
 
-        </section>
+        </div>
+
+    </div>
+
+</section>
 
 
-        <!-- Philosophy -->
 
-        <section>
+<!-- =========================================================
+     RECORD ARCHIVE
+========================================================= -->
 
-            <div class="section-inner">
+<section class="archive-section" id="archive">
 
-                <div class="section-label reveal">
-                    PHILOSOPHY
+    <div class="container">
+
+
+        <div class="archive-heading reveal">
+
+            <div>
+
+                <div class="eyebrow">
+                    기록 보관소
                 </div>
 
-                <div class="statement reveal">
-                    The most frightening things
-                    are not the things we can see.
-                    <br><br>
-                    They are the things we
-                    <em>almost</em> understand.
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Contact -->
-
-        <section id="contact" class="contact">
-
-            <div class="section-inner">
-
-                <div class="section-label reveal">
-                    CONTACT
-                </div>
-
-                <h2 class="contact-title reveal">
-                    LET'S<br>
-                    TALK.
+                <h2>
+                    남겨진
+                    <br>
+                    <span>기록들.</span>
                 </h2>
 
-                <div class="contact-links reveal">
+            </div>
 
-                    <!-- 나중에 실제 주소로 바꾸면 됨 -->
+            <div class="mono"
+                 style="font-size:9px;color:#465055;">
 
-                    <a
-                        href="#"
-                        class="contact-link"
-                    >
-                        DISCORD
-                    </a>
+                기록 수 / 004
 
-                    <a
-                        href="mailto:contact@simcheung.studio"
-                        class="contact-link"
-                    >
-                        EMAIL
-                    </a>
+            </div>
 
+        </div>
+
+
+        <div class="records">
+
+
+            <div class="record reveal"
+                 data-record="1">
+
+                <div class="record-date">
+                    2009.04.17
+                </div>
+
+                <div>
+
+                    <div class="record-title">
+                        지역 사건 보고서
+                    </div>
+
+                    <div class="record-description">
+                        공개 기록에서 삭제된 사건 관련 문서
+                    </div>
+
+                </div>
+
+                <div class="record-status">
+                    일부 복구
                 </div>
 
             </div>
 
-        </section>
 
-    </main>
+            <div class="record reveal"
+                 data-record="2">
+
+                <div class="record-date">
+                    2009.04.19
+                </div>
+
+                <div>
+
+                    <div class="record-title">
+                        사용자 토론 게시물
+                    </div>
+
+                    <div class="record-description">
+                        작성자는 존재하지 않지만 답글은 남아 있다
+                    </div>
+
+                </div>
+
+                <div class="record-status red">
+                    삭제됨
+                </div>
+
+            </div>
 
 
-    <!-- Footer -->
+            <div class="record reveal"
+                 data-record="3">
 
-    <footer>
+                <div class="record-date">
+                    2009.05.02
+                </div>
 
-        <div>
-            深層 STUDIO
+                <div>
+
+                    <div class="record-title">
+                        계정 접근 기록
+                    </div>
+
+                    <div class="record-description">
+                        폐쇄된 계정에서 발생한 비정상적인 접속
+                    </div>
+
+                </div>
+
+                <div class="record-status">
+                    확인 필요
+                </div>
+
+            </div>
+
+
+            <div class="record reveal"
+                 data-record="4">
+
+                <div class="record-date">
+                    확인 불가
+                </div>
+
+                <div>
+
+                    <div class="record-title">
+                        █████████████████
+                    </div>
+
+                    <div class="record-description">
+                        원래 시스템에는 존재하지 않는 기록
+                    </div>
+
+                </div>
+
+                <div class="record-status red">
+                    미확인
+                </div>
+
+            </div>
+
+
         </div>
 
-        <div>
-            © 2026 SIMCHEUNG STUDIO
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     RECORD MODAL
+========================================================= -->
+
+<div class="record-modal"
+     id="recordModal">
+
+    <div class="modal-window">
+
+        <button class="modal-close"
+                id="modalClose">
+            ×
+        </button>
+
+
+        <div class="modal-label"
+             id="modalLabel">
+            기록_001
         </div>
 
-    </footer>
+
+        <h3 class="modal-title"
+            id="modalTitle">
+            지역 사건 보고서
+        </h3>
 
 
-    <script>
+        <div class="modal-text"
+             id="modalText">
 
-        /* Scroll reveal */
+        </div>
 
-        const revealElements =
-            document.querySelectorAll(".reveal");
+    </div>
 
-        const observer =
-            new IntersectionObserver(
-                (entries) => {
+</div>
 
-                    entries.forEach(entry => {
 
-                        if (entry.isIntersecting) {
 
-                            entry.target.classList.add("visible");
+<!-- =========================================================
+     DEVELOPMENT STATUS
+========================================================= -->
 
-                            observer.unobserve(entry.target);
+<section class="progress-section"
+         id="development">
 
-                        }
+    <div class="container">
+
+
+        <div class="progress-header reveal">
+
+            <div>
+
+                <div class="eyebrow">
+                    개발 현황
+                </div>
+
+                <h2>
+                    현재
+                    <br>
+                    <span>진행 상황.</span>
+                </h2>
+
+            </div>
+
+            <div class="mono"
+                 style="font-size:9px;color:#465055;">
+
+                빌드 / 0.12.4
+
+            </div>
+
+        </div>
+
+
+        <div class="progress-list">
+
+
+            <div class="progress-item reveal">
+
+                <div class="progress-name">
+                    기획
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                         style="width:100%">
+                    </div>
+                </div>
+
+                <div class="progress-percent">
+                    100%
+                </div>
+
+            </div>
+
+
+            <div class="progress-item reveal">
+
+                <div class="progress-name">
+                    프로그래밍
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                         style="width:75%">
+                    </div>
+                </div>
+
+                <div class="progress-percent">
+                    75%
+                </div>
+
+            </div>
+
+
+            <div class="progress-item reveal">
+
+                <div class="progress-name">
+                    아트
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                         style="width:60%">
+                    </div>
+                </div>
+
+                <div class="progress-percent">
+                    60%
+                </div>
+
+            </div>
+
+
+            <div class="progress-item reveal">
+
+                <div class="progress-name">
+                    사운드
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                         style="width:35%">
+                    </div>
+                </div>
+
+                <div class="progress-percent">
+                    35%
+                </div>
+
+            </div>
+
+
+            <div class="progress-item reveal">
+
+                <div class="progress-name">
+                    최적화
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                         style="width:20%">
+                    </div>
+                </div>
+
+                <div class="progress-percent">
+                    20%
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     GALLERY
+========================================================= -->
+
+<section class="gallery-section">
+
+    <div class="container">
+
+
+        <div class="gallery-header reveal">
+
+            <div>
+
+                <div class="eyebrow">
+                    개발 자료
+                </div>
+
+                <h2>
+                    만들어지는
+                    <br>
+                    <span>과정.</span>
+                </h2>
+
+            </div>
+
+            <div class="mono"
+                 style="font-size:9px;color:#465055;">
+
+                개발 이미지 / 006
+
+            </div>
+
+        </div>
+
+
+        <div class="gallery-grid">
+
+
+            <div class="gallery-card large reveal">
+
+                <div class="gallery-placeholder">
+
+                    <div class="gallery-placeholder-number">
+                        이미지_001
+                    </div>
+
+                    <div class="gallery-placeholder-title">
+                        게임 환경
+                    </div>
+
+                </div>
+
+                <div class="gallery-label">
+                    환경 디자인
+                </div>
+
+            </div>
+
+
+            <div class="gallery-card reveal">
+
+                <div class="gallery-placeholder">
+
+                    <div class="gallery-placeholder-number">
+                        이미지_002
+                    </div>
+
+                    <div class="gallery-placeholder-title">
+                        사용자 인터페이스
+                    </div>
+
+                </div>
+
+                <div class="gallery-label">
+                    UI
+                </div>
+
+            </div>
+
+
+            <div class="gallery-card reveal">
+
+                <div class="gallery-placeholder">
+
+                    <div class="gallery-placeholder-number">
+                        이미지_003
+                    </div>
+
+                    <div class="gallery-placeholder-title">
+                        기록 자료
+                    </div>
+
+                </div>
+
+                <div class="gallery-label">
+                    세계관
+                </div>
+
+            </div>
+
+
+            <div class="gallery-card reveal">
+
+                <div class="gallery-placeholder">
+
+                    <div class="gallery-placeholder-number">
+                        이미지_004
+                    </div>
+
+                    <div class="gallery-placeholder-title">
+                        테스트 빌드
+                    </div>
+
+                </div>
+
+                <div class="gallery-label">
+                    개발
+                </div>
+
+            </div>
+
+
+            <div class="gallery-card reveal">
+
+                <div class="gallery-placeholder">
+
+                    <div class="gallery-placeholder-number">
+                        이미지_005
+                    </div>
+
+                    <div class="gallery-placeholder-title">
+                        컨셉 디자인
+                    </div>
+
+                </div>
+
+                <div class="gallery-label">
+                    아트
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PHILOSOPHY
+========================================================= -->
+
+<section class="philosophy">
+
+    <div class="container philosophy-inner">
+
+
+        <div class="philosophy-label">
+
+            06 / 10
+
+            <br><br>
+
+            스튜디오
+            <br>
+            철학
+
+        </div>
+
+
+        <div>
+
+            <h2 class="philosophy-title reveal">
+
+                우리는
+                <br>
+
+                <span>남겨진 것에</span>
+                <br>
+
+                주목합니다.
+
+            </h2>
+
+
+            <p class="philosophy-text reveal">
+
+                우리는 거대한 세계보다
+                그 안에 남겨진 작은 흔적에 관심을 둡니다.
+
+                <br><br>
+
+                누군가 남긴 기록,
+                삭제된 파일,
+                아무도 설명하지 않는 장소.
+
+                <br><br>
+
+                <strong>
+                    보이지 않는 것을 발견하는 순간,
+                    이야기는 시작됩니다.
+                </strong>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     TEAM
+========================================================= -->
+
+<section class="team-section"
+         id="studio">
+
+    <div class="container">
+
+
+        <div class="team-header reveal">
+
+            <div>
+
+                <div class="eyebrow">
+                    개발 팀
+                </div>
+
+                <h2>
+                    만드는
+                    <br>
+                    <span>사람들.</span>
+                </h2>
+
+            </div>
+
+            <div class="mono"
+                 style="font-size:9px;color:#465055;">
+
+                深層 STUDIO
+
+            </div>
+
+        </div>
+
+
+        <div class="team-grid">
+
+
+            <div class="team-card reveal">
+
+                <div class="team-number">
+                    01
+                </div>
+
+                <div class="team-role">
+                    총괄 / 디렉터
+                </div>
+
+                <div class="team-name">
+                    深層
+                </div>
+
+                <div class="team-description">
+                    게임의 방향성과 세계관,
+                    전체적인 개발을 담당합니다.
+                </div>
+
+            </div>
+
+
+            <div class="team-card reveal">
+
+                <div class="team-number">
+                    02
+                </div>
+
+                <div class="team-role">
+                    클라이언트
+                </div>
+
+                <div class="team-name">
+                    개발팀
+                </div>
+
+                <div class="team-description">
+                    게임 시스템과 인터랙션,
+                    플레이 경험을 구현합니다.
+                </div>
+
+            </div>
+
+
+            <div class="team-card reveal">
+
+                <div class="team-number">
+                    03
+                </div>
+
+                <div class="team-role">
+                    아트
+                </div>
+
+                <div class="team-name">
+                    아트팀
+                </div>
+
+                <div class="team-description">
+                    게임의 공간과 시각적 분위기,
+                    각종 에셋을 제작합니다.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     DEV LOG
+========================================================= -->
+
+<section class="devlog-section">
+
+    <div class="container">
+
+
+        <div class="devlog-header reveal">
+
+            <div>
+
+                <div class="eyebrow">
+                    개발일지
+                </div>
+
+                <h2>
+                    만드는
+                    <br>
+                    <span>과정.</span>
+                </h2>
+
+            </div>
+
+            <div class="mono"
+                 style="font-size:9px;color:#465055;">
+
+                최근 기록
+
+            </div>
+
+        </div>
+
+
+        <div class="devlog-list">
+
+
+            <div class="devlog-item reveal">
+
+                <div class="devlog-date">
+                    2026.10.03
+                </div>
+
+                <div class="devlog-title">
+                    첫 번째 조사 시스템 구현
+                </div>
+
+                <div class="devlog-category">
+                    개발
+                </div>
+
+            </div>
+
+
+            <div class="devlog-item reveal">
+
+                <div class="devlog-date">
+                    2026.09.28
+                </div>
+
+                <div class="devlog-title">
+                    기록 보관 시스템 프로토타입 완성
+                </div>
+
+                <div class="devlog-category">
+                    시스템
+                </div>
+
+            </div>
+
+
+            <div class="devlog-item reveal">
+
+                <div class="devlog-date">
+                    2026.09.14
+                </div>
+
+                <div class="devlog-title">
+                    NO INDEX 초기 프로토타입 제작
+                </div>
+
+                <div class="devlog-category">
+                    프로토타입
+                </div>
+
+            </div>
+
+
+            <div class="devlog-item reveal">
+
+                <div class="devlog-date">
+                    2026.08.31
+                </div>
+
+                <div class="devlog-title">
+                    深層 STUDIO 설립
+                </div>
+
+                <div class="devlog-category">
+                    스튜디오
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     NEWS
+========================================================= -->
+
+<section class="news-section">
+
+    <div class="container">
+
+
+        <div class="news-header reveal">
+
+            <div>
+
+                <div class="eyebrow">
+                    최신 소식
+                </div>
+
+                <h2>
+                    최근
+                    <br>
+                    <span>소식.</span>
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="news-grid">
+
+
+            <div class="news-card reveal">
+
+                <div class="news-date">
+                    2026.10.04
+                </div>
+
+                <div class="news-title">
+                    深層 STUDIO 공식 웹사이트 공개
+                </div>
+
+                <div class="news-text">
+                    스튜디오와 현재 개발 중인
+                    NO INDEX를 소개하는
+                    공식 웹사이트를 공개했습니다.
+                </div>
+
+            </div>
+
+
+            <div class="news-card reveal">
+
+                <div class="news-date">
+                    2026.10.01
+                </div>
+
+                <div class="news-title">
+                    개발팀 모집 시작
+                </div>
+
+                <div class="news-text">
+                    NO INDEX의 정식 출시까지
+                    함께할 개발팀을 모집하고 있습니다.
+                </div>
+
+            </div>
+
+
+            <div class="news-card reveal">
+
+                <div class="news-date">
+                    2026.09.14
+                </div>
+
+                <div class="news-title">
+                    NO INDEX 개발 시작
+                </div>
+
+                <div class="news-text">
+                    새로운 미스터리 조사 게임의
+                    본격적인 개발을 시작했습니다.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     RELEASE
+========================================================= -->
+
+<section class="release-section">
+
+    <div class="release-bg"></div>
+
+
+    <div class="container release-inner reveal">
+
+
+        <div class="release-label">
+            09 / 10 — 출시 예정
+        </div>
+
+
+        <h2 class="release-title">
+
+            아직 끝나지
+            <br>
+
+            <span>않았습니다.</span>
+
+        </h2>
+
+
+        <p class="release-description">
+
+            NO INDEX는 현재 개발 중입니다.
+            게임에 대한 새로운 정보와
+            개발 소식은 앞으로 이곳에서 공개됩니다.
+
+        </p>
+
+
+        <!-- 나중에 Steam 링크로 교체 -->
+
+        <a href="#"
+           class="steam-button">
+
+            스팀 페이지 준비 중
+
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CONTACT
+========================================================= -->
+
+<section class="contact"
+         id="contact">
+
+    <div class="container">
+
+
+        <div class="contact-small">
+            10 / 10 — 문의
+        </div>
+
+
+        <h2 class="contact-title reveal">
+
+            기억할 만한
+            <br>
+
+            <span>게임을</span>
+            <br>
+
+            만듭니다.
+
+        </h2>
+
+
+        <div class="contact-bottom">
+
+
+            <div class="contact-links">
+
+                <!-- 디스코드 링크로 교체 -->
+
+                <a href="#">
+                    디스코드
+                </a>
+
+
+                <!-- 실제 이메일로 교체 -->
+
+                <a href="mailto:contact@simcheung.studio">
+                    이메일
+                </a>
+
+            </div>
+
+
+            <div class="contact-location">
+
+                深層 STUDIO
+                <br>
+
+                대한민국
+                <br>
+
+                2026 설립
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <div class="container footer-inner">
+
+
+        <div class="footer-left">
+
+            <div class="footer-logo">
+                深層
+            </div>
+
+            <div class="footer-copy">
+                © 2026 深層 STUDIO
+            </div>
+
+        </div>
+
+
+        <div class="footer-right">
+            기록은 남습니다.
+        </div>
+
+
+    </div>
+
+</footer>
+
+
+
+<script>
+
+/* =========================================================
+   마우스 주변 빛
+========================================================= */
+
+const ambient =
+    document.getElementById("ambient");
+
+document.addEventListener("mousemove", (event) => {
+
+    ambient.style.left =
+        event.clientX + "px";
+
+    ambient.style.top =
+        event.clientY + "px";
+
+});
+
+
+/* =========================================================
+   첫 화면 패럴랙스
+========================================================= */
+
+const heroGlow =
+    document.querySelector(".hero-glow");
+
+document.addEventListener("mousemove", (event) => {
+
+    const x =
+        (event.clientX / window.innerWidth - .5) * 30;
+
+    const y =
+        (event.clientY / window.innerHeight - .5) * 30;
+
+    heroGlow.style.transform =
+        `translate(${x}px, ${y}px)`;
+
+});
+
+
+/* =========================================================
+   스크롤 등장
+========================================================= */
+
+const observer =
+    new IntersectionObserver(
+
+        (entries) => {
+
+            entries.forEach((entry) => {
+
+                if (entry.isIntersecting) {
+
+                    entry.target.classList.add(
+                        "visible"
+                    );
+
+                }
+
+            });
+
+        },
+
+        {
+            threshold: .12
+        }
+
+    );
+
+
+document
+    .querySelectorAll(".reveal")
+    .forEach((element) => {
+
+        observer.observe(element);
+
+    });
+
+
+/* =========================================================
+   네비게이션
+========================================================= */
+
+const navbar =
+    document.getElementById("navbar");
+
+window.addEventListener("scroll", () => {
+
+    if (window.scrollY > 50) {
+
+        navbar.style.background =
+            "rgba(5,6,7,.94)";
+
+        navbar.style.borderBottom =
+            "1px solid rgba(255,255,255,.09)";
+
+    } else {
+
+        navbar.style.background =
+            "rgba(5,6,7,.70)";
+
+        navbar.style.borderBottom =
+            "1px solid rgba(255,255,255,.055)";
+
+    }
+
+});
+
+
+/* =========================================================
+   기록 데이터
+========================================================= */
+
+const records = {
+
+    1: {
+
+        label: "기록_001 / 2009.04.17",
+
+        title: "지역 사건 보고서",
+
+        text:
+`문서 번호: 0417-A
+
+2009년 4월 17일.
+지역에서 발생한 사건에 대한 보고서.
+
+원본 문서는 공개 기록 보관소에서
+삭제된 것으로 확인되었습니다.
+
+삭제 요청자는 확인되지 않았습니다.
+
+특이사항:
+
+사건 발생 시각과
+최초 신고 시각 사이에
+17분의 공백이 존재합니다.
+
+해당 공백에 대한 기록은
+현재 존재하지 않습니다.`
+
+    },
+
+
+    2: {
+
+        label: "기록_002 / 2009.04.19",
+
+        title: "사용자 토론 게시물",
+
+        text:
+`게시물 제목:
+
+"그날 밤에 무슨 일이 있었는지 아는 사람?"
+
+작성자:
+확인할 수 없음
+
+답글:
+12개
+
+현재 남아 있는 답글:
+7개
+
+삭제된 답글:
+5개
+
+원래 작성자의 계정은
+게시물 작성 이후 36시간 뒤 폐쇄되었습니다.
+
+그러나 이상하게도
+게시물의 마지막 수정 기록은
+계정 폐쇄 이후에 존재합니다.`
+
+    },
+
+
+    3: {
+
+        label: "기록_003 / 2009.05.02",
+
+        title: "계정 접근 기록",
+
+        text:
+`접근 기록을 분석하는 중입니다.
+
+사용자:
+UNKNOWN
+
+상태:
+폐쇄됨
+
+마지막 정상 접속:
+2009.04.19 03:14
+
+비정상 접속:
+2009.05.02 04:17
+
+접속 위치:
+확인 불가
+
+접속 장치:
+확인 불가
+
+특이사항:
+
+해당 계정은 폐쇄된 이후
+새로운 기록을 생성했습니다.`
+
+    },
+
+
+    4: {
+
+        label: "기록_004 / 확인 불가",
+
+        title: "█████████████████",
+
+        text:
+`이 기록은 원래 시스템에
+존재하지 않는 것으로 표시됩니다.
+
+검색 결과에는 존재합니다.
+
+파일 자체도 존재합니다.
+
+그러나 생성 날짜가 없습니다.
+
+수정 날짜도 없습니다.
+
+작성자도 없습니다.
+
+그리고
+
+이 기록을 처음 발견한 사용자의
+접근 기록 역시 존재하지 않습니다.`
+
+    }
+
+};
+
+
+/* =========================================================
+   기록 모달
+========================================================= */
+
+const modal =
+    document.getElementById("recordModal");
+
+const modalClose =
+    document.getElementById("modalClose");
+
+const modalLabel =
+    document.getElementById("modalLabel");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const modalText =
+    document.getElementById("modalText");
+
+
+document
+    .querySelectorAll(".record")
+    .forEach((record) => {
+
+        record.addEventListener("click", () => {
+
+            const id =
+                record.dataset.record;
+
+            const data =
+                records[id];
+
+            if (!data) return;
+
+            modalLabel.textContent =
+                data.label;
+
+            modalTitle.textContent =
+                data.title;
+
+            modalText.textContent =
+                data.text;
+
+            modal.classList.add("active");
+
+            document.body.style.overflow =
+                "hidden";
+
+        });
+
+    });
+
+
+function closeModal() {
+
+    modal.classList.remove("active");
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+modalClose.addEventListener(
+    "click",
+    closeModal
+);
+
+
+modal.addEventListener(
+    "click",
+    (event) => {
+
+        if (
+            event.target === modal
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   아카이브 경고 글리치
+========================================================= */
+
+const warning =
+    document.querySelector(".archive-warning");
+
+setInterval(() => {
+
+    if (Math.random() > .72) {
+
+        warning.style.opacity = "0";
+
+        setTimeout(() => {
+
+            warning.style.opacity = "1";
+
+        }, 80);
+
+    }
+
+}, 1800);
+
+
+/* =========================================================
+   아주 드문 사이트 이상현상
+========================================================= */
+
+let strangeEventRunning = false;
+
+function strangeEvent() {
+
+    if (strangeEventRunning) return;
+
+    strangeEventRunning = true;
+
+    const original =
+        warning.textContent;
+
+    warning.textContent =
+        "경고 — 등록되지 않은 접근";
+
+    warning.style.color =
+        "#a45a5a";
+
+    document.body.classList.add(
+        "glitching"
+    );
+
+    setTimeout(() => {
+
+        warning.textContent =
+            original;
+
+        warning.style.color =
+            "";
+
+        document.body.classList.remove(
+            "glitching"
+        );
+
+        strangeEventRunning = false;
+
+    }, 900);
+
+}
+
+
+/*
+   너무 자주 발생하지 않도록
+   랜덤 간격으로 실행
+*/
+
+setInterval(() => {
+
+    if (
+        Math.random() > .88
+    ) {
+
+        strangeEvent();
+
+    }
+
+}, 7000);
+
+
+/* =========================================================
+   개발 현황 진행률
+========================================================= */
+
+const progressObserver =
+    new IntersectionObserver(
+
+        (entries) => {
+
+            entries.forEach((entry) => {
+
+                if (
+                    entry.isIntersecting
+                ) {
+
+                    const fills =
+                        entry.target
+                            .querySelectorAll(
+                                ".progress-fill"
+                            );
+
+                    fills.forEach((fill) => {
+
+                        const width =
+                            fill.style.width;
+
+                        fill.style.width =
+                            "0%";
+
+                        requestAnimationFrame(() => {
+
+                            setTimeout(() => {
+
+                                fill.style.width =
+                                    width;
+
+                            }, 150);
+
+                        });
 
                     });
 
-                },
-                {
-                    threshold: 0.12
+                    progressObserver.unobserve(
+                        entry.target
+                    );
+
                 }
-            );
 
-        revealElements.forEach(element => {
-            observer.observe(element);
-        });
+            });
+
+        },
+
+        {
+            threshold: .2
+        }
+
+    );
 
 
-        /* Subtle mouse movement */
+const progressList =
+    document.querySelector(
+        ".progress-list"
+    );
 
-        const ambient =
-            document.querySelector(".ambient");
+if (progressList) {
 
-        document.addEventListener("mousemove", (event) => {
+    progressObserver.observe(
+        progressList
+    );
 
-            const x =
-                (event.clientX / window.innerWidth - 0.5) * 40;
+}
 
-            const y =
-                (event.clientY / window.innerHeight - 0.5) * 40;
 
-            ambient.style.transform =
-                `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+/* =========================================================
+   이미지 자리 클릭
+========================================================= */
 
-        });
+document
+    .querySelectorAll(".gallery-card")
+    .forEach((card) => {
 
-    </script>
+        card.addEventListener(
+            "click",
+            () => {
+
+                const title =
+                    card.querySelector(
+                        ".gallery-placeholder-title"
+                    );
+
+                if (!title) return;
+
+                /*
+                    나중에 실제 이미지가 들어가면
+                    여기에서 이미지 확대 기능을
+                    추가할 수 있음.
+                */
+
+                console.log(
+                    "개발 자료:",
+                    title.textContent
+                );
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
+   페이지 진입 시 약간의 지연
+========================================================= */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        document.body.style.opacity =
+            "1";
+
+    }
+);
+
+</script>
 
 </body>
 </html>
