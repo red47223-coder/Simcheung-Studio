@@ -2697,6 +2697,212 @@ footer{background:#070809}
  .reveal{opacity:1;transform:none}
 }
 
+
+
+/* =========================================================
+   深層 STUDIO — 가독성 및 데스크톱 타이포그래피 개선
+   기존 섹션/콘텐츠/스크립트는 유지하고 시각 스타일만 보정
+========================================================= */
+:root {
+    --type-body: 17px;
+    --type-small: 12px;
+    --type-muted: #9aa3a8;
+    --type-line: rgba(210, 224, 230, .15);
+}
+html { font-size: 16px; }
+body {
+    font-size: var(--type-body);
+    line-height: 1.75;
+    color: #e9edef;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+.container,
+.nav-inner {
+    width: min(calc(100% - 112px), 1480px);
+}
+.section { padding: clamp(112px, 10vw, 168px) 0; }
+.eyebrow,
+.project-number,
+.hero-index,
+.hero-kicker,
+.hero-bottom,
+.nav-status,
+.brand-name,
+.archive-logo,
+.archive-folder,
+.archive-search,
+.archive-result-top,
+.record-status,
+.contact-small,
+.contact-location,
+.footer-copy,
+.footer-right,
+.footer-left,
+.nav-progress,
+.section-index,
+.section-intro,
+.archive-date,
+.archive-state,
+.project-top,
+.project-meta,
+.gallery-placeholder-meta {
+    font-size: 12px;
+    line-height: 1.65;
+    letter-spacing: .09em;
+}
+.brand-kanji { font-size: 29px; }
+.brand-name { letter-spacing: .17em; }
+.nav-links { gap: clamp(22px, 2.5vw, 42px); }
+.nav-links a,
+.navlinks a {
+    font-size: 13px;
+    letter-spacing: .08em;
+}
+.nav-status { font-size: 12px; }
+.hero-kicker { gap: 18px; margin-bottom: 38px; }
+.hero-sub {
+    max-width: 720px;
+    font-size: clamp(17px, 1.25vw, 20px);
+    line-height: 2;
+    color: #a1aaaf;
+}
+.hero-sub strong { color: #e1e7e9; }
+.project-title,
+.archive-heading h2,
+.philosophy-title,
+.release-title,
+.contact-title {
+    text-wrap: balance;
+}
+.project-description,
+.project-info,
+.project-copy p,
+.project-description p,
+.philosophy-text,
+.release-description,
+.section-intro,
+.hero-desc,
+.hero-sub,
+.contact-bottom,
+.contact-location {
+    font-size: clamp(16px, 1.15vw, 19px);
+    line-height: 2;
+    color: #a0a9ae;
+    word-break: keep-all;
+}
+.project-copy h3 { line-height: 1.12; }
+.project-info { gap: clamp(36px, 6vw, 100px); }
+.project-number { color: #a0abb0; }
+.archive-heading { margin-bottom: 54px; }
+.archive-heading h2 { line-height: .98; }
+.record-title { font-size: 17px; line-height: 1.6; color: #d0d7da; }
+.record-description { font-size: 14px; line-height: 1.8; color: #929ca1; }
+.archive-result-title { font-size: 15px; line-height: 1.6; }
+.archive-result-text { font-size: 14px; line-height: 1.8; }
+.archive-warning { font-size: 14px; line-height: 1.8; }
+.modal-title { font-size: clamp(26px, 2.4vw, 36px); }
+.modal-text { font-size: 16px; line-height: 1.9; }
+.gallery-placeholder-title { font-size: clamp(18px, 1.5vw, 24px); line-height: 1.45; }
+.gallery-placeholder { font-size: 14px; line-height: 1.8; }
+.philosophy-text { max-width: 700px; }
+.philosophy-text strong { color: #e2e8eb; }
+.team-description { max-width: 340px; font-size: 15px; line-height: 1.9; color: #9aa4a9; }
+.team-card { padding: clamp(22px, 2.5vw, 36px); }
+.devlog-title { font-size: 17px; line-height: 1.65; color: #c2cbd0; }
+.devlog-text,
+.devlog-description,
+.dev-card p { font-size: 15px; line-height: 1.9; color: #9aa4a9; }
+.news-title { font-size: 20px; line-height: 1.5; color: #d2d9dc; }
+.news-text { font-size: 15px; line-height: 1.9; color: #9aa4a9; }
+.news-date,
+.news-category { font-size: 12px; letter-spacing: .08em; }
+.release-description { max-width: 700px; }
+.steam-button,
+.btn,
+.text-link { font-size: 14px; letter-spacing: .06em; }
+.contact-title { line-height: .98; }
+.contact-links a { font-size: 14px; }
+.footer-copy { font-size: 11px; color: #7f898e; }
+.footer-logo { font-size: 17px; }
+button,
+a { -webkit-tap-highlight-color: transparent; }
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid #9bb9c5;
+    outline-offset: 5px;
+}
+::selection { background: #a9c2cc; color: #080b0d; }
+
+/* 넓은 모니터: 작은 캡션을 키우고 본문 폭을 안정화 */
+@media (min-width: 1500px) {
+    body { font-size: 18px; }
+    .eyebrow,
+    .project-number,
+    .hero-index,
+    .hero-bottom,
+    .nav-status,
+    .brand-name,
+    .archive-folder,
+    .archive-search,
+    .record-status,
+    .footer-copy { font-size: 13px; }
+    .nav-links a,
+    .navlinks a { font-size: 14px; }
+    .hero-sub { font-size: 20px; }
+    .project-copy p,
+    .philosophy-text,
+    .release-description,
+    .news-text,
+    .team-description { font-size: 17px; }
+}
+
+/* 태블릿 */
+@media (max-width: 900px) {
+    .container,
+    .nav-inner { width: min(calc(100% - 48px), 720px); }
+    .section { padding: 100px 0; }
+    .hero-sub { margin-top: 52px; font-size: 17px; }
+    .project-copy p,
+    .philosophy-text,
+    .release-description,
+    .news-text,
+    .team-description { font-size: 16px; }
+    .record-title { font-size: 16px; }
+    .record-description { font-size: 14px; }
+}
+
+/* 모바일: 과도하게 커진 PC 타이포그래피를 화면에 맞춤 */
+@media (max-width: 600px) {
+    .container,
+    .nav-inner { width: calc(100% - 36px); }
+    .section { padding: 76px 0; }
+    .eyebrow,
+    .project-number,
+    .hero-index,
+    .hero-bottom,
+    .nav-status,
+    .brand-name,
+    .archive-folder,
+    .archive-search,
+    .record-status,
+    .footer-copy { font-size: 11px; }
+    .nav-links a,
+    .navlinks a { font-size: 12px; }
+    .hero-sub,
+    .project-copy p,
+    .philosophy-text,
+    .release-description,
+    .news-text,
+    .team-description,
+    .section-intro { font-size: 15px; line-height: 1.9; }
+    .record-title { font-size: 15px; }
+    .record-description { font-size: 13px; }
+    .news-title { font-size: 18px; }
+    .modal-text { font-size: 15px; }
+}
+
 </style>
 </head>
 
