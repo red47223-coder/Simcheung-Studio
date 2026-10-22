@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07090b">
+<meta property="og:title" content="深層 STUDIO — 기록은 남습니다.">
+<meta property="og:description" content="숨겨진 이야기와 잊힌 기록을 다루는 독립 게임 개발 스튜디오. NO INDEX 개발 기록.">
 
 <title>深層 — SIMCHEUNG STUDIO</title>
 
@@ -2405,6 +2408,218 @@ footer {
 
 }
 
+
+/* =========================================================
+   PREMIUM REDESIGN / DEEP ARCHIVE EDITION
+   Preserves the existing sections, records, modal and content.
+========================================================= */
+:root{
+ --bg:#07090b;--panel:#0b0e10;--panel2:#111518;
+ --text:#edf0ef;--muted:#929b9f;--dim:#4d565b;
+ --line:rgba(225,235,235,.10);--blue:#a0bdc7;--blue-dim:#526f79;
+ --red:#d65b50;--max:1440px;
+}
+html{scroll-padding-top:96px;scroll-behavior:smooth}
+body{
+ background:
+  radial-gradient(ellipse at 15% 9%,rgba(96,124,132,.09),transparent 34%),
+  radial-gradient(ellipse at 90% 58%,rgba(115,41,39,.06),transparent 34%),var(--bg);
+ color:var(--text);
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;z-index:9996;opacity:.045;
+ background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+ background-size:80px 80px;mask-image:radial-gradient(ellipse at center,#000,transparent 90%);
+}
+::selection{background:var(--red);color:#fff}
+.container,.nav-inner{width:min(calc(100% - 88px),var(--max))}
+#navbar{
+ height:82px;background:rgba(7,9,11,.78);border-bottom:1px solid rgba(255,255,255,.07);
+ transition:background .3s,border-color .3s,box-shadow .3s;
+}
+#navbar.scrolled{background:rgba(7,9,11,.94);box-shadow:0 12px 40px #0005}
+.nav-progress{position:absolute;top:0;left:0;width:100%;height:2px;z-index:5}
+.nav-progress span{display:block;width:0;height:100%;background:var(--red);box-shadow:0 0 16px #d65b5080}
+.brand-kanji{transition:color .25s,text-shadow .25s}
+.brand:hover .brand-kanji{color:#fff;text-shadow:0 0 24px #a0bdc755}
+.nav-links{gap:clamp(18px,2.4vw,36px)}
+.nav-links a{padding:8px 0;transition:color .25s}
+.nav-links a:after{background:var(--red)}
+.nav-status{font-size:8px;letter-spacing:.14em}
+.status-dot{background:#d65b50;box-shadow:0 0 12px #d65b5070}
+.hero{min-height:100svh;isolation:isolate}
+.hero-grid{opacity:.22;background-size:64px 64px;mask-image:radial-gradient(ellipse at 28% 42%,#000,transparent 76%)}
+.hero-glow{
+ width:min(76vw,1050px);height:min(76vw,1050px);right:-24%;top:-4%;
+ background:radial-gradient(circle,rgba(73,112,125,.16),rgba(65,90,100,.045) 40%,transparent 70%);
+}
+.hero-content{padding-top:76px}
+.hero-kicker{gap:13px}
+.hero-kicker-line{width:46px;background:var(--red)}
+.hero-kicker span{font-size:9px;letter-spacing:.16em}
+.hero-kicker-code{color:#b45a53!important;border:1px solid #683b37;padding:5px 7px;font-size:8px!important}
+.hero-title{
+ font-size:clamp(108px,17.8vw,278px);letter-spacing:-.145em;
+ text-shadow:0 18px 70px #0009;line-height:.82;
+}
+.hero-title:after{color:#737b7e;letter-spacing:.55em;font-size:9px}
+.hero-sub{max-width:620px;margin-top:100px;font-size:clamp(15px,1.35vw,19px);line-height:2.05;color:#a4adaf}
+.hero-sub strong{color:#e0e5e4}
+.hero-bottom{bottom:36px}
+.scroll-indicator{letter-spacing:.18em;font-size:8px}
+.scroll-line{width:65px}
+.hero-index{font-size:9px;letter-spacing:.1em}
+.section{padding:clamp(105px,12vw,180px) 0}
+.eyebrow{font-size:9px;letter-spacing:.2em;color:#9ba7ab}
+.project-header,.archive-heading,.progress-header,.gallery-header,.team-header,.devlog-header,.news-header{margin-bottom:clamp(42px,6vw,80px)}
+.project-title{font-size:clamp(76px,11vw,162px);letter-spacing:-.095em}
+.project-title span{color:#69757a;font-size:.22em;letter-spacing:.1em}
+.game-display{
+ min-height:clamp(500px,55vw,760px);margin-top:65px;
+ border:1px solid rgba(177,204,211,.16);
+ background:
+  radial-gradient(ellipse at 55% 43%,rgba(71,113,128,.15),transparent 50%),
+  linear-gradient(145deg,#0b1013,#07090b 72%);
+ box-shadow:0 35px 110px #0007,inset 0 0 90px #5d84900a;
+}
+.game-display:after{
+ content:"";position:absolute;inset:46px 0 0;pointer-events:none;
+ background:linear-gradient(112deg,transparent 25%,rgba(190,220,225,.025) 48%,transparent 68%);
+}
+.display-top{height:48px;background:#0b0e10cc;border-bottom-color:#b4d1d80f;letter-spacing:.13em}
+.archive-ui{
+ border-color:#66808a3d;background:rgba(4,7,8,.9);
+ box-shadow:0 40px 110px #000a,inset 0 0 100px #7aa0ae08;
+ transform:perspective(1400px) rotateX(1deg) rotateY(-1.4deg);
+ transition:transform .7s,box-shadow .7s;
+}
+.game-display:hover .archive-ui{transform:perspective(1400px) rotateX(0) rotateY(0) translateY(-3px);box-shadow:0 48px 120px #000b,inset 0 0 100px #7aa0ae0c}
+.archive-sidebar{background:#080b0d;border-right-color:#b4d1d812}
+.archive-logo{color:#a0bdc7;letter-spacing:.16em}
+.archive-folder{transition:color .2s,padding-left .2s,border-color .2s}
+.archive-folder:hover,.archive-folder.active{padding-left:7px;color:#e2ecee;border-bottom-color:#a0bdc733}
+.archive-search{background:#0a0e10;border-color:#a9c6ce20}
+.archive-result{transition:padding .25s,border-color .25s}
+.archive-result:hover{padding-left:8px;border-bottom-color:#a0bdc733}
+.archive-result-title{color:#d0d8d9}
+.archive-warning{color:#c56a62;letter-spacing:.1em}
+.project-info{gap:clamp(45px,8vw,120px);padding-top:clamp(55px,8vw,100px)}
+.project-description{font-size:clamp(18px,2vw,25px);line-height:1.95;color:#aeb7b9}
+.project-description strong{color:#f0f2ef}
+.meta-grid{border-top-color:#b8d0d814}
+.meta{border-bottom-color:#b8d0d814}
+.meta-label{letter-spacing:.18em}
+.meta-value{color:#b5c0c2}
+.archive-section{background:linear-gradient(180deg,#080a0c,#060809);border-color:#b8d0d814}
+.archive-heading h2{font-size:clamp(62px,9vw,126px);letter-spacing:-.1em}
+.archive-heading h2 span{color:#59676d}
+.records{border-top-color:#b8d0d82b}
+.record{position:relative;transition:padding .3s,background .3s,border-color .3s}
+.record:hover{padding-left:15px;background:linear-gradient(90deg,#a0bdc70a,transparent);border-bottom-color:#a0bdc72c}
+.record-title{transition:color .2s}
+.record:hover .record-title{color:#f2f4f2}
+.record-status.red{color:#d87970}
+.record-modal,.modal-window{backdrop-filter:blur(18px)}
+.modal-window{border-color:#78929a35;background:linear-gradient(145deg,#0f1417,#080a0c);box-shadow:0 30px 120px #000c}
+.modal-close{transition:color .2s,transform .2s}
+.modal-close:hover{color:var(--red);transform:rotate(90deg)}
+.progress-section{background:radial-gradient(ellipse at 85% 20%,#7b39330a,transparent 35%)}
+.progress-item{padding:24px 0;border-bottom:1px solid #b8d0d812}
+.progress-bar{height:3px;background:#273035}
+.progress-fill{background:linear-gradient(90deg,#526f79,#a0bdc7);box-shadow:0 0 16px #a0bdc722}
+.progress-percent{font-variant-numeric:tabular-nums;color:#c5d2d4}
+.gallery-grid{gap:12px}
+.gallery-card{position:relative;overflow:hidden;border:1px solid #b8d0d817;background:#0b0f11;transition:border-color .35s,transform .45s,box-shadow .45s}
+.gallery-card:hover{transform:translateY(-5px);border-color:#a0bdc74d;box-shadow:0 22px 55px #0005}
+.gallery-placeholder{transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .8s}
+.gallery-card:hover .gallery-placeholder{transform:scale(1.035);filter:brightness(1.15)}
+.gallery-label{letter-spacing:.14em}
+.philosophy{background:radial-gradient(ellipse at 50% 50%,#7a9ca50a,transparent 60%)}
+.philosophy-title{letter-spacing:-.085em}
+.philosophy-text{color:#a2abad;line-height:2.1}
+.team-grid,.news-grid{gap:1px;background:#b8d0d818}
+.team-card,.news-card{background:#090c0e;transition:background .3s}
+.team-card:hover,.news-card:hover{background:#101619}
+.team-number,.news-date{color:#8b9ba0}
+.devlog-item{transition:padding .25s,background .25s}
+.devlog-item:hover{padding-left:12px;background:#a0bdc707}
+.devlog-title{transition:color .2s}
+.devlog-item:hover .devlog-title{color:#e8eeee}
+.release-section{overflow:hidden;background:radial-gradient(ellipse at 82% 55%,#8c3b340f,transparent 40%),#090c0e}
+.release-bg{opacity:.7}
+.release-title{letter-spacing:-.09em}
+.steam-button{transition:transform .25s,background .25s,border-color .25s}
+.steam-button:hover{transform:translateY(-3px);border-color:#a0bdc766;background:#a0bdc70b}
+.contact{background:radial-gradient(ellipse at 18% 35%,#7a9ba50a,transparent 38%),#07090b}
+.contact-title{letter-spacing:-.09em}
+.contact-links a{position:relative;transition:color .2s}
+.contact-links a:after{content:"↗";margin-left:8px;color:var(--red);opacity:.75}
+.contact-links a:hover{color:#fff}
+footer{border-top:1px solid #b8d0d812}
+.footer-logo{color:#e8efef}
+.footer-copy,.footer-right{color:#69767b}
+a:focus-visible,button:focus-visible{outline:1px solid var(--red);outline-offset:5px}
+.reveal{transition:opacity .85s ease,transform .85s cubic-bezier(.2,.7,.2,1)}
+@media(max-width:1050px){
+ .container,.nav-inner{width:min(calc(100% - 48px),var(--max))}
+ .nav-links{gap:18px}
+ .nav-status{display:none}
+ .hero-title{font-size:clamp(100px,19vw,200px)}
+ .archive-ui{grid-template-columns:170px 1fr}
+ .project-info{gap:45px}
+}
+@media(max-width:700px){
+ #navbar{height:70px}
+ .container,.nav-inner{width:calc(100% - 38px)}
+ .nav-links{gap:13px}
+ .nav-links a{font-size:9px;letter-spacing:0}
+ .brand{gap:8px}
+ .brand-kanji{font-size:22px}
+ .brand-name{font-size:7px;letter-spacing:.14em}
+ .hero{min-height:94svh}
+ .hero-content{padding-top:45px}
+ .hero-title{font-size:clamp(82px,21vw,140px);margin-left:-7px}
+ .hero-title:after{left:8px;bottom:-24px;font-size:8px;letter-spacing:.35em}
+ .hero-sub{margin-top:75px;font-size:14px;line-height:1.95}
+ .hero-bottom{bottom:24px}
+ .hero-index{font-size:8px}
+ .section{padding:100px 0}
+ .project-title{font-size:clamp(68px,15vw,100px)}
+ .game-display{min-height:500px;margin-top:40px}
+ .archive-ui{left:4%;top:10%;width:92%;height:80%;grid-template-columns:105px 1fr}
+ .archive-sidebar{padding:17px 11px}
+ .archive-logo{font-size:8px;margin-bottom:24px}
+ .archive-folder{font-size:8px;padding:10px 0;overflow-wrap:anywhere}
+ .archive-main{padding:18px 14px}
+ .archive-search{height:32px;margin-bottom:18px;padding:0 8px;font-size:8px}
+ .archive-result{padding:13px 0}
+ .archive-result-title{font-size:11px}
+ .archive-result-text{font-size:9px}
+ .archive-warning{right:12px;bottom:12px;font-size:7px}
+ .project-info{grid-template-columns:1fr;gap:38px;padding-top:55px}
+ .project-description{font-size:18px}
+ .archive-heading h2{font-size:clamp(58px,13vw,88px)}
+ .record{gap:8px}
+ .progress-item{grid-template-columns:82px 1fr 42px;gap:12px}
+ .contact-title{font-size:clamp(55px,13vw,90px)}
+}
+@media(max-width:430px){
+ .nav-links{gap:9px}
+ .nav-links a{font-size:8px}
+ .brand-name{display:none}
+ .hero-kicker-code{display:none}
+ .hero-title{font-size:22vw}
+ .hero-index{max-width:130px;text-align:right}
+ .archive-ui{grid-template-columns:88px 1fr}
+ .archive-main{padding:14px 10px}
+ .archive-result-text{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ .reveal{opacity:1;transform:none}
+}
+
 </style>
 </head>
 
@@ -2422,6 +2637,7 @@ footer {
 ========================================================= -->
 
 <nav id="navbar">
+    <div class="nav-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
 
     <div class="nav-inner">
 
@@ -2493,6 +2709,7 @@ footer {
         <div class="hero-kicker">
 
             <div class="hero-kicker-line"></div>
+                    <span class="hero-kicker-code mono">SC—01 / FIELD RECORD</span>
 
             <span>
                 독립 게임 개발 스튜디오
@@ -3782,16 +3999,12 @@ footer {
 
                 <!-- 디스코드 링크로 교체 -->
 
-                <a href="#">
-                    디스코드
-                </a>
+                <a href="https://github.com/red47223-coder/Simcheung-Studio" target="_blank" rel="noopener noreferrer">프로젝트 저장소 ↗</a>
 
 
                 <!-- 실제 이메일로 교체 -->
 
-                <a href="mailto:contact@simcheung.studio">
-                    이메일
-                </a>
+                <a href="https://github.com/red47223-coder/Simcheung-Studio" target="_blank" rel="noopener noreferrer">GitHub 문의 ↗</a>
 
             </div>
 
@@ -4401,6 +4614,20 @@ window.addEventListener(
 
     }
 );
+
+
+/* Premium scroll progress + safe pointer effects */
+const scrollProgress = document.getElementById("scrollProgress");
+const navbarForScroll = document.getElementById("navbar");
+function updateScrollProgress(){
+ const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+ const percent = maxScroll > 0 ? Math.min(100, Math.max(0, window.scrollY / maxScroll * 100)) : 0;
+ if(scrollProgress) scrollProgress.style.width = percent + "%";
+ if(navbarForScroll) navbarForScroll.classList.toggle("scrolled", window.scrollY > 18);
+}
+window.addEventListener("scroll", updateScrollProgress, {passive:true});
+window.addEventListener("resize", updateScrollProgress);
+updateScrollProgress();
 
 </script>
 
